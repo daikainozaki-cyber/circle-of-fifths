@@ -205,4 +205,4 @@ netlify deploy --prod
 ## デザイン要望
 
 ![[5度圏.png]]
-![[改善.png]]
+![[改善.png]]![[更に改善.png]]

@@ -12,18 +12,15 @@
         }
 
         body {
-            font-family: 'Arial', 'Hiragino Sans', 'Meiryo', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
             background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
             min-height: 100vh;
-            padding: 15px;
-        }
-
-        h1 {
-            color: #2e7d32;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 2.2em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .main-container {
@@ -264,8 +261,6 @@
     </style>
 </head>
 <body>
-    <h1>五度圏 (Circle of Fifths)</h1>
-
     <div class="main-container">
         <div class="left-panel">
             <div class="circle-container">
@@ -480,9 +475,11 @@
             majorText.setAttribute('x', majorTextPos.x);
             majorText.setAttribute('y', majorTextPos.y + 6);
             majorText.setAttribute('text-anchor', 'middle');
+            majorText.setAttribute('dominant-baseline', 'middle');
             majorText.setAttribute('font-size', '22');
-            majorText.setAttribute('font-weight', 'bold');
+            majorText.setAttribute('font-weight', '600');
             majorText.setAttribute('fill', 'white');
+            majorText.setAttribute('style', 'text-rendering: optimizeLegibility;');
             majorText.textContent = key.major;
             svg.appendChild(majorText);
 
@@ -499,14 +496,17 @@
             minorSegment.setAttribute('data-index', index);
             svg.appendChild(minorSegment);
 
-            // 短調のテキスト
-            const minorTextPos = polarToCartesian(centerX, centerY, (innerMinorRadius + centerMinorRadius) / 2, midAngle);
+            // 短調のテキスト（外側に配置）
+            const minorTextPos = polarToCartesian(centerX, centerY, (innerMinorRadius + centerMinorRadius) / 2 + 20, midAngle);
             const minorText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             minorText.setAttribute('x', minorTextPos.x);
-            minorText.setAttribute('y', minorTextPos.y - 8);
+            minorText.setAttribute('y', minorTextPos.y);
             minorText.setAttribute('text-anchor', 'middle');
+            minorText.setAttribute('dominant-baseline', 'middle');
             minorText.setAttribute('font-size', '16');
+            minorText.setAttribute('font-weight', '500');
             minorText.setAttribute('fill', '#1b5e20');
+            minorText.setAttribute('style', 'text-rendering: optimizeLegibility;');
             minorText.textContent = key.minor;
             svg.appendChild(minorText);
 
@@ -522,6 +522,31 @@
         centerCircle.setAttribute('r', centerMinorRadius);
         centerCircle.setAttribute('fill', 'white');
         svg.appendChild(centerCircle);
+
+        // 中央のタイトルテキスト
+        const titleText1 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        titleText1.setAttribute('x', centerX);
+        titleText1.setAttribute('y', centerY - 10);
+        titleText1.setAttribute('text-anchor', 'middle');
+        titleText1.setAttribute('dominant-baseline', 'middle');
+        titleText1.setAttribute('font-size', '24');
+        titleText1.setAttribute('font-weight', '700');
+        titleText1.setAttribute('fill', '#2e7d32');
+        titleText1.setAttribute('style', 'text-rendering: optimizeLegibility;');
+        titleText1.textContent = '五度圏';
+        svg.appendChild(titleText1);
+
+        const titleText2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        titleText2.setAttribute('x', centerX);
+        titleText2.setAttribute('y', centerY + 15);
+        titleText2.setAttribute('text-anchor', 'middle');
+        titleText2.setAttribute('dominant-baseline', 'middle');
+        titleText2.setAttribute('font-size', '16');
+        titleText2.setAttribute('font-weight', '400');
+        titleText2.setAttribute('fill', '#66bb6a');
+        titleText2.setAttribute('style', 'text-rendering: optimizeLegibility;');
+        titleText2.textContent = 'Circle of Fifths';
+        svg.appendChild(titleText2);
 
         // キー選択
         let selectedElement = null;
@@ -567,7 +592,8 @@
                 if (degree.isMajor) {
                     displayRadius = outerRadius + 30;
                 } else {
-                    displayRadius = (innerMinorRadius + centerMinorRadius) / 2;
+                    // マイナーコードのディグリーは中心寄りに配置
+                    displayRadius = (innerMinorRadius + centerMinorRadius) / 2 - 5;
                 }
 
                 const pos = polarToCartesian(centerX, centerY, displayRadius, midAngle);
@@ -578,7 +604,7 @@
                 const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                 circle.setAttribute('cx', pos.x);
                 circle.setAttribute('cy', degree.isMajor ? pos.y : pos.y + 15);
-                const circleRadius = degree.isMajor ? degreeCircleRadius : 18;
+                const circleRadius = degree.isMajor ? degreeCircleRadius : 16;
                 circle.setAttribute('r', circleRadius);
                 circle.setAttribute('fill', degree.color);
                 circle.setAttribute('fill-opacity', degree.isMajor ? '1' : '0.8');
@@ -590,10 +616,12 @@
                 const textY = degree.isMajor ? pos.y + 5 : pos.y + 15 + 4;
                 text.setAttribute('y', textY);
                 text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('dominant-baseline', 'middle');
                 const fontSize = degree.isMajor ? '14' : '10';
                 text.setAttribute('font-size', fontSize);
-                text.setAttribute('font-weight', 'bold');
+                text.setAttribute('font-weight', '600');
                 text.setAttribute('fill', degree.color === DOMINANT_COLOR ? 'white' : '#333');
+                text.setAttribute('style', 'text-rendering: optimizeLegibility;');
                 text.textContent = degree.roman;
 
                 degreeGroup.appendChild(circle);
