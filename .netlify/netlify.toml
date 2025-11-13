@@ -1,0 +1,26 @@
+plugins = []
+headers = []
+redirects = []
+
+[functions]
+
+[functions."*"]
+
+[build]
+publish = "/Users/nozakidaikai/Obsidian/デジタル百姓総本部/プロジェクト/五度圏アプリ"
+publishOrigin = "default"
+base = "/Users/nozakidaikai/Obsidian/デジタル百姓総本部/プロジェクト/五度圏アプリ"
+
+[build.environment]
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]

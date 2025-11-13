@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五度圏 - HPS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Hiragino Sans', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #2e7d32;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .circle-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        svg {
+            display: block;
+        }
+
+        .segment-major {
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .segment-major:hover {
+            opacity: 0.8;
+        }
+
+        .segment-minor {
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .segment-minor:hover {
+            opacity: 0.8;
+        }
+
+        .selected {
+            stroke: #ff6f00;
+            stroke-width: 4;
+        }
+
+        .info-panel {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-height: 100px;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .info-panel h2 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .info-panel p {
+            color: #555;
+            font-size: 1.1em;
+            margin: 8px 0;
+        }
+
+        .degree-circle {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .degree-circle:hover {
+            transform: scale(1.1);
+        }
+
+        text {
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>五度圏 (Circle of Fifths)</h1>
+
+    <div class="circle-container">
+        <svg width="700" height="700" id="circle-of-fifths">
+            <!-- SVGはJavaScriptで生成 -->
+        </svg>
+    </div>
+
+    <div class="info-panel">
+        <h2>キーを選択してください</h2>
+        <p>長調（外側）または短調（中間）のセグメントをクリックすると、詳細情報が表示されます。</p>
+    </div>
+
+    <script>
+        // 五度圏の12キー（12時の位置から時計回り）
+        const keys = [
+            { major: 'C', minor: 'Am', sharps: 0, flats: 0, color: '#66bb6a' },
+            { major: 'G', minor: 'Em', sharps: 1, flats: 0, color: '#66bb6a' },
+            { major: 'D', minor: 'Bm', sharps: 2, flats: 0, color: '#66bb6a' },
+            { major: 'A', minor: 'F♯m', sharps: 3, flats: 0, color: '#66bb6a' },
+            { major: 'E', minor: 'C♯m', sharps: 4, flats: 0, color: '#66bb6a' },
+            { major: 'B', minor: 'G♯m', sharps: 5, flats: 0, color: '#66bb6a' },
+            { major: 'G♭/F♯', minor: 'E♭m/D♯m', sharps: 6, flats: 6, color: '#66bb6a' },
+            { major: 'D♭', minor: 'B♭m', sharps: 0, flats: 5, color: '#66bb6a' },
+            { major: 'A♭', minor: 'Fm', sharps: 0, flats: 4, color: '#66bb6a' },
+            { major: 'E♭', minor: 'Cm', sharps: 0, flats: 3, color: '#66bb6a' },
+            { major: 'B♭', minor: 'Gm', sharps: 0, flats: 2, color: '#66bb6a' },
+            { major: 'F', minor: 'Dm', sharps: 0, flats: 1, color: '#66bb6a' }
+        ];
+
+        // ダイアトニックコードのディグリー（五度圏上のオフセット）
+        const majorDegrees = [
+            { roman: 'I', offset: 0, color: '#ffa726', isMajor: true },      // トニック
+            { roman: 'ii', offset: 2, color: '#ffa726', isMajor: false },    // 完全5度×2
+            { roman: 'iii', offset: 4, color: '#ffa726', isMajor: false },   // 完全5度×4
+            { roman: 'IV', offset: -1, color: '#ffb74d', isMajor: true },    // 完全4度上
+            { roman: 'V', offset: 1, color: '#ffb74d', isMajor: true },      // 完全5度上
+            { roman: 'vi', offset: 3, color: '#ffa726', isMajor: false },    // 完全5度×3
+            { roman: 'vii°', offset: 5, color: '#424242', isMajor: false }   // 完全5度×5
+        ];
+
+        const minorDegrees = [
+            { roman: 'i', offset: 0, color: '#ffa726', isMajor: false },      // Im7
+            { roman: 'ii°', offset: 2, color: '#424242', isMajor: false },    // IIm7(b5)
+            { roman: 'bIII', offset: 0, color: '#ffb74d', isMajor: true },    // bIIIMaj7（平行長調）
+            { roman: 'iv', offset: -1, color: '#ffa726', isMajor: false },    // IVm7
+            { roman: 'v', offset: 1, color: '#ffa726', isMajor: false },      // Vm7（マイナー！）
+            { roman: 'bVI', offset: -1, color: '#ffb74d', isMajor: true },    // bVIMaj7
+            { roman: 'bVII', offset: 1, color: '#ffb74d', isMajor: true }     // bVII7
+        ];
+
+        const svg = document.getElementById('circle-of-fifths');
+        const centerX = 350;
+        const centerY = 350;
+        const outerRadius = 280;   // 長調のセグメント外径
+        const innerMajorRadius = 200; // 長調のセグメント内径
+        const innerMinorRadius = 200; // 短調のセグメント外径
+        const centerMinorRadius = 120; // 短調のセグメント内径
+        const degreeRadius = 80;    // ディグリー円の半径
+        const degreeCircleRadius = 25; // ディグリーの円の大きさ
+
+        const anglePerSegment = 30; // 360度 / 12
+
+        // パス描画用の関数
+        function describeArc(x, y, radius, startAngle, endAngle) {
+            const start = polarToCartesian(x, y, radius, endAngle);
+            const end = polarToCartesian(x, y, radius, startAngle);
+            const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+            return [
+                "M", start.x, start.y,
+                "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y
+            ].join(" ");
+        }
+
+        function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+            const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+            return {
+                x: centerX + (radius * Math.cos(angleInRadians)),
+                y: centerY + (radius * Math.sin(angleInRadians))
+            };
+        }
+
+        function createSegmentPath(cx, cy, innerR, outerR, startAngle, endAngle) {
+            const startOuter = polarToCartesian(cx, cy, outerR, startAngle);
+            const endOuter = polarToCartesian(cx, cy, outerR, endAngle);
+            const startInner = polarToCartesian(cx, cy, innerR, endAngle);
+            const endInner = polarToCartesian(cx, cy, innerR, startAngle);
+
+            const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+            return [
+                "M", startOuter.x, startOuter.y,
+                "A", outerR, outerR, 0, largeArcFlag, 1, endOuter.x, endOuter.y,
+                "L", startInner.x, startInner.y,
+                "A", innerR, innerR, 0, largeArcFlag, 0, endInner.x, endInner.y,
+                "Z"
+            ].join(" ");
+        }
+
+        // 各セグメントを描画
+        keys.forEach((key, index) => {
+            const startAngle = index * anglePerSegment;
+            const endAngle = startAngle + anglePerSegment;
+            const midAngle = startAngle + anglePerSegment / 2;
+
+            // 長調セグメント（外側、濃い緑）
+            const majorPath = createSegmentPath(centerX, centerY, innerMajorRadius, outerRadius, startAngle, endAngle);
+            const majorSegment = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            majorSegment.setAttribute('d', majorPath);
+            majorSegment.setAttribute('fill', '#388e3c');
+            majorSegment.setAttribute('stroke', 'white');
+            majorSegment.setAttribute('stroke-width', '2');
+            majorSegment.classList.add('segment-major');
+            majorSegment.setAttribute('data-key', key.major);
+            majorSegment.setAttribute('data-type', 'major');
+            majorSegment.setAttribute('data-index', index);
+            svg.appendChild(majorSegment);
+
+            // 長調のテキスト
+            const majorTextPos = polarToCartesian(centerX, centerY, (outerRadius + innerMajorRadius) / 2, midAngle);
+            const majorText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            majorText.setAttribute('x', majorTextPos.x);
+            majorText.setAttribute('y', majorTextPos.y + 6);
+            majorText.setAttribute('text-anchor', 'middle');
+            majorText.setAttribute('font-size', '22');
+            majorText.setAttribute('font-weight', 'bold');
+            majorText.setAttribute('fill', 'white');
+            majorText.textContent = key.major;
+            svg.appendChild(majorText);
+
+            // 短調セグメント（中間、薄い緑）
+            const minorPath = createSegmentPath(centerX, centerY, centerMinorRadius, innerMinorRadius, startAngle, endAngle);
+            const minorSegment = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            minorSegment.setAttribute('d', minorPath);
+            minorSegment.setAttribute('fill', '#81c784');
+            minorSegment.setAttribute('stroke', 'white');
+            minorSegment.setAttribute('stroke-width', '2');
+            minorSegment.classList.add('segment-minor');
+            minorSegment.setAttribute('data-key', key.minor);
+            minorSegment.setAttribute('data-type', 'minor');
+            minorSegment.setAttribute('data-index', index);
+            svg.appendChild(minorSegment);
+
+            // 短調のテキスト（上にずらす）
+            const minorTextPos = polarToCartesian(centerX, centerY, (innerMinorRadius + centerMinorRadius) / 2, midAngle);
+            const minorText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            minorText.setAttribute('x', minorTextPos.x);
+            minorText.setAttribute('y', minorTextPos.y - 8); // もっと上にずらす
+            minorText.setAttribute('text-anchor', 'middle');
+            minorText.setAttribute('font-size', '16');
+            minorText.setAttribute('fill', '#1b5e20');
+            minorText.textContent = key.minor;
+            svg.appendChild(minorText);
+
+            // クリックイベント
+            majorSegment.addEventListener('click', () => selectKey(key, 'major', majorSegment));
+            minorSegment.addEventListener('click', () => selectKey(key, 'minor', minorSegment));
+        });
+
+        // 中央の白い円
+        const centerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        centerCircle.setAttribute('cx', centerX);
+        centerCircle.setAttribute('cy', centerY);
+        centerCircle.setAttribute('r', centerMinorRadius);
+        centerCircle.setAttribute('fill', 'white');
+        svg.appendChild(centerCircle);
+
+        // キー選択
+        let selectedElement = null;
+        let degreeElements = []; // ディグリー表示を保存
+
+        function selectKey(key, type, element) {
+            // 前の選択を解除
+            if (selectedElement) {
+                selectedElement.classList.remove('selected');
+            }
+
+            // 前のディグリー表示を削除
+            degreeElements.forEach(el => el.remove());
+            degreeElements = [];
+
+            // 新しい選択
+            element.classList.add('selected');
+            selectedElement = element;
+
+            // 選択されたキーのインデックスを取得
+            const selectedIndex = parseInt(element.getAttribute('data-index'));
+
+            // ディグリーの配列を選択（長調 or 短調）
+            const degreesToShow = type === 'major' ? majorDegrees : minorDegrees;
+
+            // ディグリーを五度圏上に配置
+            degreesToShow.forEach((degree) => {
+                // 五度圏上のコードの根音の位置を計算
+                let targetIndex = (selectedIndex + degree.offset + 12) % 12;
+
+                // 長調選択時のみ：マイナーコードは短調リングに表示（+9ステップ）
+                // 短調選択時：そのままの位置を使用
+                if (type === 'major' && !degree.isMajor) {
+                    targetIndex = (targetIndex + 9) % 12;
+                }
+
+                // セグメントの中央角度を計算
+                const startAngle = targetIndex * anglePerSegment;
+                const midAngle = startAngle + anglePerSegment / 2;
+
+                // 配置する半径（メジャーコードは外側、マイナーコードは内側の短調リングに）
+                let displayRadius;
+                if (degree.isMajor) {
+                    // メジャーコード：外側のさらに外（キー名と重ならないように）
+                    displayRadius = outerRadius + 30;
+                } else {
+                    // マイナーコード・ディミニッシュ：短調のリングに表示
+                    displayRadius = (innerMinorRadius + centerMinorRadius) / 2;
+                }
+
+                // 位置を計算
+                const pos = polarToCartesian(centerX, centerY, displayRadius, midAngle);
+
+                const degreeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                degreeGroup.classList.add('degree-circle');
+
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', pos.x);
+                // マイナーコードの円を下にずらす
+                circle.setAttribute('cy', degree.isMajor ? pos.y : pos.y + 15);
+                // マイナーコードの円はもっと小さくする
+                const circleRadius = degree.isMajor ? degreeCircleRadius : 18;
+                circle.setAttribute('r', circleRadius);
+                circle.setAttribute('fill', degree.color);
+                circle.setAttribute('fill-opacity', degree.isMajor ? '1' : '0.8'); // マイナーコードは透明に
+                circle.setAttribute('stroke', 'white');
+                circle.setAttribute('stroke-width', '2');
+
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', pos.x);
+                // マイナーコードは円の位置に合わせて下にずらす
+                const textY = degree.isMajor ? pos.y + 5 : pos.y + 15 + 4;
+                text.setAttribute('y', textY);
+                text.setAttribute('text-anchor', 'middle');
+                // マイナーコードのフォントをもっと小さくする
+                const fontSize = degree.isMajor ? '14' : '10';
+                text.setAttribute('font-size', fontSize);
+                text.setAttribute('font-weight', 'bold');
+                text.setAttribute('fill', degree.color === '#424242' ? 'white' : '#333');
+                text.textContent = degree.roman;
+
+                degreeGroup.appendChild(circle);
+                degreeGroup.appendChild(text);
+                svg.appendChild(degreeGroup);
+
+                degreeElements.push(degreeGroup);
+            });
+
+            // 情報パネルを更新
+            const infoPanel = document.querySelector('.info-panel');
+            const keyName = type === 'major' ? key.major : key.minor;
+            const keyType = type === 'major' ? '長調' : '短調';
+
+            let accidentals = '';
+            if (key.sharps > 0) {
+                accidentals = `♯が${key.sharps}個`;
+            } else if (key.flats > 0) {
+                accidentals = `♭が${key.flats}個`;
+            } else {
+                accidentals = '調号なし';
+            }
+
+            const parallel = type === 'major' ?
+                `平行短調: ${key.minor}` :
+                `平行長調: ${key.major}`;
+
+            infoPanel.innerHTML = `
+                <h2>${keyName} ${keyType}</h2>
+                <p><strong>調号:</strong> ${accidentals}</p>
+                <p>${parallel}</p>
+                <p style="margin-top: 15px; color: #2e7d32; font-size: 1em;">
+                    <strong>ダイアトニックコード:</strong> 五度圏上に表示されています
+                </p>
+            `;
+        }
+    </script>
+</body>
+</html>
