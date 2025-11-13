@@ -237,17 +237,7 @@
             <div class="progression-selector">
                 <label for="progression-select">進行を選択:</label>
                 <select id="progression-select">
-                    <option value="">-- 進行を選択してください --</option>
-                    <option value="251">ツーファイブワン (II-V-I)</option>
-                    <option value="1645_50s">50s進行 (I-VI-IV-V)</option>
-                    <option value="1564">王道進行 (I-V-VI-IV)</option>
-                    <option value="4516">王道進行バリエ (IV-V-I-VI)</option>
-                    <option value="4m-4-1-I7">サブドミナント・マイナー進行 (IV-IVm-I-I7)</option>
-                    <option value="1451">スリーコード (I-IV-V-I)</option>
-                    <option value="1625">1625進行 (I-VI-II-V)</option>
-                    <option value="4536">IV-V-III-VI</option>
-                    <option value="1345">I-III-IV-V</option>
-                    <option value="1b741">I-bVII-IV-I</option>
+                    <option value="">-- キーを選択してください --</option>
                 </select>
             </div>
 
@@ -306,11 +296,11 @@
         // ダイアトニックコードのディグリー（五度圏上のオフセット）
         const majorDegrees = [
             { roman: 'I', offset: 0, suffix: 'Maj7', function: 'トニック', isMajor: true, color: TONIC_COLOR },
-            { roman: 'I7', offset: 0, suffix: '', function: 'セカンダリー・ドミナント (V7/IV)', isMajor: true, color: DOMINANT_COLOR },
+            { roman: 'I', offset: 0, suffix: '7', function: 'セカンダリー・ドミナント (V7/IV)', isMajor: true, color: DOMINANT_COLOR },
             { roman: 'ii', offset: 2, suffix: 'm7', function: 'サブドミナント', isMajor: false, color: SUBDOMINANT_COLOR },
             { roman: 'iii', offset: 4, suffix: 'm7', function: 'トニック（代理）', isMajor: false, color: TONIC_COLOR },
             { roman: 'IV', offset: -1, suffix: 'Maj7', function: 'サブドミナント', isMajor: true, color: SUBDOMINANT_COLOR },
-            { roman: 'IVm7', offset: -1, suffix: '', function: 'サブドミナント・マイナー', isMajor: false, color: SUBDOMINANT_COLOR },
+            { roman: 'IV', offset: -1, suffix: 'm7', function: 'サブドミナント・マイナー', isMajor: false, color: SUBDOMINANT_COLOR },
             { roman: 'V', offset: 1, suffix: '7', function: 'ドミナント', isMajor: true, color: DOMINANT_COLOR },
             { roman: 'vi', offset: 3, suffix: 'm7', function: 'トニック（代理）', isMajor: false, color: TONIC_COLOR },
             { roman: 'vii°', offset: 5, suffix: 'm7(♭5)', function: 'ドミナント（代理）', isMajor: false, color: DOMINANT_COLOR },
@@ -318,27 +308,47 @@
         ];
 
         const minorDegrees = [
-            { roman: 'i', offset: 0, suffix: 'm7', function: 'トニック', isMajor: false, color: TONIC_COLOR },
-            { roman: 'ii°', offset: 2, suffix: 'm7(♭5)', function: 'サブドミナント（代理）', isMajor: false, color: SUBDOMINANT_COLOR },
-            { roman: 'bIII', offset: 0, suffix: 'Maj7', function: 'トニック（代理）', isMajor: true, color: TONIC_COLOR },
-            { roman: 'iv', offset: -1, suffix: 'm7', function: 'サブドミナント', isMajor: false, color: SUBDOMINANT_COLOR },
-            { roman: 'v', offset: 1, suffix: 'm7', function: 'ドミナント', isMajor: false, color: DOMINANT_COLOR },
-            { roman: 'bVI', offset: -1, suffix: 'Maj7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR },
-            { roman: 'bVII', offset: 1, suffix: '7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR }
+            { roman: 'i', offset: 0, circleOffset: 0, suffix: 'm7', function: 'トニック', isMajor: false, color: TONIC_COLOR },
+            { roman: 'i', offset: 0, circleOffset: 0, suffix: 'm(Maj7)', function: 'トニック', isMajor: false, color: TONIC_COLOR },
+            { roman: 'i', offset: 0, circleOffset: 0, suffix: 'm6', function: 'トニック', isMajor: false, color: TONIC_COLOR },
+            { roman: 'ii', offset: 2, circleOffset: 2, suffix: 'm7(♭5)', function: 'サブドミナント（代理）', isMajor: false, color: SUBDOMINANT_COLOR },
+            { roman: 'bIII', offset: -3, circleOffset: 0, suffix: 'Maj7', function: 'トニック（代理）', isMajor: true, color: TONIC_COLOR },
+            { roman: 'iv', offset: -1, circleOffset: -1, suffix: 'm7', function: 'サブドミナント', isMajor: false, color: SUBDOMINANT_COLOR },
+            { roman: 'V', offset: 1, circleOffset: 1, suffix: '7', function: 'ドミナント（ハーモニック）', isMajor: true, color: DOMINANT_COLOR },
+            { roman: 'v', offset: 1, circleOffset: 1, suffix: 'm7', function: 'ドミナント（ナチュラル）', isMajor: false, color: DOMINANT_COLOR },
+            { roman: 'bVI', offset: -4, circleOffset: -1, suffix: 'Maj7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR },
+            { roman: 'VII', offset: 5, circleOffset: 5, suffix: 'dim7', function: 'ドミナント（代理）', isMajor: false, color: DOMINANT_COLOR },
+            { roman: 'bVII', offset: -2, circleOffset: 1, suffix: 'Maj7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR },
+            { roman: 'bVII', offset: -2, circleOffset: 1, suffix: '7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR },
+            { roman: 'I', offset: 0, circleOffset: 0, suffix: '7', function: 'セカンダリー・ドミナント (V7/IV)', isMajor: true, color: DOMINANT_COLOR }
         ];
 
         // よくあるコード進行のプリセット（メジャー・キー）
-        const progressions = {
-            '251': { name: 'ツーファイブワン (II-V-I)', degrees: ['ii', 'V', 'I'] },
-            '1645_50s': { name: '50s進行 (I-VI-IV-V)', degrees: ['I', 'vi', 'IV', 'V'] },
-            '1564': { name: '王道進行 (I-V-VI-IV)', degrees: ['I', 'V', 'vi', 'IV'] },
-            '4516': { name: '王道進行バリエ (IV-V-I-VI)', degrees: ['IV', 'V', 'I', 'vi'] },
-            '4m-4-1-I7': { name: 'サブドミナント・マイナー進行 (IV-IVm-I-I7)', degrees: ['IV', 'IVm7', 'I', 'I7'] },
-            '1451': { name: 'スリーコード (I-IV-V-I)', degrees: ['I', 'IV', 'V', 'I'] },
-            '1625': { name: '1625進行 (I-VI-II-V)', degrees: ['I', 'vi', 'ii', 'V'] },
-            '4536': { name: 'IV-V-III-VI', degrees: ['IV', 'V', 'iii', 'vi'] },
-            '1345': { name: 'I-III-IV-V', degrees: ['I', 'iii', 'IV', 'V'] },
-            '1b741': { name: 'I-bVII-IV-I', degrees: ['I', 'bVII', 'IV', 'I'] }
+        const majorProgressions = {
+            '251': { name: 'ツーファイブワン (II-V-I)', degrees: ['iim7', 'V7', 'IMaj7'] },
+            '1645_50s': { name: '50s進行 (I-VI-IV-V)', degrees: ['IMaj7', 'vim7', 'IVMaj7', 'V7'] },
+            '1564': { name: '王道進行 (I-V-VI-IV)', degrees: ['IMaj7', 'V7', 'vim7', 'IVMaj7'] },
+            '4516': { name: '王道進行バリエ (IV-V-I-VI)', degrees: ['IVMaj7', 'V7', 'IMaj7', 'vim7'] },
+            '4m-4-1-I7': { name: 'サブドミナント・マイナー進行 (IV-IVm-I-I7)', degrees: ['IVMaj7', 'IVm7', 'IMaj7', 'I7'] },
+            '1451': { name: 'スリーコード (I-IV-V-I)', degrees: ['IMaj7', 'IVMaj7', 'V7', 'IMaj7'] },
+            '1625': { name: '1625進行 (I-VI-II-V)', degrees: ['IMaj7', 'vim7', 'iim7', 'V7'] },
+            '4536': { name: 'IV-V-III-VI', degrees: ['IVMaj7', 'V7', 'iiim7', 'vim7'] },
+            '1345': { name: 'I-III-IV-V', degrees: ['IMaj7', 'iiim7', 'IVMaj7', 'V7'] },
+            '1b741': { name: 'I-bVII-IV-I', degrees: ['IMaj7', 'bVIIMaj7', 'IVMaj7', 'IMaj7'] }
+        };
+
+        // よくあるコード進行のプリセット（マイナー・キー）
+        const minorProgressions = {
+            'm251': { name: 'マイナー・ツーファイブワン (IIm7♭5-V7-Im)', degrees: ['iim7(♭5)', 'V7', 'im7'] },
+            'mblues': { name: 'マイナー・ブルース (Im-IVm-V7-Im)', degrees: ['im7', 'ivm7', 'V7', 'im7'] },
+            'cliche': { name: 'マイナー・ライン・クリシェ', degrees: ['im7', 'im(Maj7)', 'im7', 'im6'] },
+            'secondary': { name: 'セカンダリー・ドミナント (Im-I7-IVm-V7)', degrees: ['im7', 'I7', 'ivm7', 'V7'] },
+            'harmonic': { name: 'ハーモニック・マイナー進行 (Im-bVI-V7-Im)', degrees: ['im7', 'bVIMaj7', 'V7', 'im7'] },
+            'relative': { name: 'リラティブ・メジャーへ (IIm7♭5-V7-Im-bIII)', degrees: ['iim7(♭5)', 'V7', 'im7', 'bIIIMaj7'] },
+            'dim': { name: 'ディミニッシュ・アプローチ (Im-VIIdim-V7-Im)', degrees: ['im7', 'VIIdim7', 'V7', 'im7'] },
+            'natural': { name: 'ナチュラルマイナー系 (Im-IVm-bVII-bIII)', degrees: ['im7', 'ivm7', 'bVII7', 'bIIIMaj7'] },
+            'prep251': { name: 'ツーファイブへの準備 (Im-bVI-IIm7♭5-V7)', degrees: ['im7', 'bVIMaj7', 'iim7(♭5)', 'V7'] },
+            'royal_minor': { name: '王道進行マイナー版 (bVI-bVII-Im-V7)', degrees: ['bVIMaj7', 'bVII7', 'im7', 'V7'] }
         };
 
         const svg = document.getElementById('circle-of-fifths');
@@ -471,13 +481,15 @@
             const allDegrees = type === 'major' ? majorDegrees : minorDegrees;
 
             // 五度圏上には基本的なダイアトニックコードのみ表示
-            const majorDiatonicOnly = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii°'];
-            const minorDiatonicOnly = ['i', 'ii°', 'bIII', 'iv', 'v', 'bVI', 'bVII'];
+            const majorDiatonicOnly = ['IMaj7', 'iim7', 'iiim7', 'IVMaj7', 'V7', 'vim7', 'vii°m7(♭5)'];
+            const minorDiatonicOnly = ['im7', 'iim7(♭5)', 'bIIIMaj7', 'ivm7', 'vm7', 'bVIMaj7', 'bVIIMaj7'];
             const diatonicOnly = type === 'major' ? majorDiatonicOnly : minorDiatonicOnly;
-            const degreesToShow = allDegrees.filter(d => diatonicOnly.includes(d.roman));
+            const degreesToShow = allDegrees.filter(d => diatonicOnly.includes(d.roman + d.suffix));
 
             degreesToShow.forEach((degree) => {
-                let targetIndex = (selectedIndex + degree.offset + 12) % 12;
+                // 五度圏表示用はcircleOffsetを使用（なければoffset）
+                const displayOffset = degree.circleOffset !== undefined ? degree.circleOffset : degree.offset;
+                let targetIndex = (selectedIndex + displayOffset + 12) % 12;
 
                 if (type === 'major' && !degree.isMajor) {
                     targetIndex = (targetIndex + 9) % 12;
@@ -553,7 +565,32 @@
                 </p>
             `;
 
+            updateProgressionSelect();
             updateProgressionDisplay();
+        }
+
+        // コード進行セレクトの更新（メジャー/マイナーに応じて）
+        function updateProgressionSelect() {
+            const progressionSelect = document.getElementById('progression-select');
+            const progressions = currentType === 'major' ? majorProgressions : minorProgressions;
+
+            // ドロップダウンを再構築
+            progressionSelect.innerHTML = '<option value="">-- 進行を選択してください --</option>';
+
+            Object.keys(progressions).forEach(key => {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = progressions[key].name;
+                progressionSelect.appendChild(option);
+            });
+
+            // 表示をクリア
+            const progressionContent = document.getElementById('progression-content');
+            progressionContent.innerHTML = `
+                <div class="placeholder-message">
+                    キーとコード進行を選択してください
+                </div>
+            `;
         }
 
         // コード進行パネルの更新
@@ -565,6 +602,7 @@
                 return;
             }
 
+            const progressions = currentType === 'major' ? majorProgressions : minorProgressions;
             const progression = progressions[selectedProgression];
             const degreesData = currentType === 'major' ? majorDegrees : minorDegrees;
 
@@ -574,10 +612,12 @@
 
             // 進行のディグリーに対応するコード情報を取得
             const chords = progression.degrees.map(degreeRoman => {
-                const degreeInfo = degreesData.find(d => d.roman === degreeRoman);
+                const degreeInfo = degreesData.find(d => (d.roman + d.suffix) === degreeRoman);
                 if (!degreeInfo) return null;
 
-                const rootIndex = (currentKeyIndex + degreeInfo.offset + 12) % 12;
+                // マイナーキーの場合、トニックの位置（平行調+3）を基準にoffsetを加える
+                const baseIndex = currentType === 'minor' ? (currentKeyIndex + 3) % 12 : currentKeyIndex;
+                const rootIndex = (baseIndex + degreeInfo.offset + 12) % 12;
                 const rootNote = getNoteName(rootIndex, useSharp);
                 const chordName = rootNote + degreeInfo.suffix;
 
