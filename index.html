@@ -179,7 +179,7 @@
         }
 
         .function-tonic {
-            color: #ffa726;
+            color: #ff9800;
             font-weight: bold;
         }
 
@@ -298,28 +298,33 @@
             return useSharp ? note.sharp : note.flat;
         }
 
+        // 機能ごとの色定義
+        const TONIC_COLOR = '#ff9800';        // トニック系：オレンジ
+        const SUBDOMINANT_COLOR = '#42a5f5';  // サブドミナント系：ブルー
+        const DOMINANT_COLOR = '#ef5350';     // ドミナント系：レッド
+
         // ダイアトニックコードのディグリー（五度圏上のオフセット）
         const majorDegrees = [
-            { roman: 'I', offset: 0, suffix: 'Maj7', function: 'トニック', isMajor: true, color: '#ffa726' },
-            { roman: 'I7', offset: 0, suffix: '', function: 'セカンダリー・ドミナント (V7/IV)', isMajor: true, color: '#ef5350' },
-            { roman: 'ii', offset: 2, suffix: 'm7', function: 'サブドミナント', isMajor: false, color: '#ffa726' },
-            { roman: 'iii', offset: 4, suffix: 'm7', function: 'トニック（代理）', isMajor: false, color: '#ffa726' },
-            { roman: 'IV', offset: -1, suffix: 'Maj7', function: 'サブドミナント', isMajor: true, color: '#ffb74d' },
-            { roman: 'IVm7', offset: -1, suffix: '', function: 'サブドミナント・マイナー', isMajor: false, color: '#ffb74d' },
-            { roman: 'V', offset: 1, suffix: '7', function: 'ドミナント', isMajor: true, color: '#ffb74d' },
-            { roman: 'vi', offset: 3, suffix: 'm7', function: 'トニック（代理）', isMajor: false, color: '#ffa726' },
-            { roman: 'vii°', offset: 5, suffix: 'm7(♭5)', function: 'ドミナント（代理）', isMajor: false, color: '#424242' },
-            { roman: 'bVII', offset: -2, suffix: 'Maj7', function: 'サブドミナント（代理）', isMajor: true, color: '#ffb74d' }
+            { roman: 'I', offset: 0, suffix: 'Maj7', function: 'トニック', isMajor: true, color: TONIC_COLOR },
+            { roman: 'I7', offset: 0, suffix: '', function: 'セカンダリー・ドミナント (V7/IV)', isMajor: true, color: DOMINANT_COLOR },
+            { roman: 'ii', offset: 2, suffix: 'm7', function: 'サブドミナント', isMajor: false, color: SUBDOMINANT_COLOR },
+            { roman: 'iii', offset: 4, suffix: 'm7', function: 'トニック（代理）', isMajor: false, color: TONIC_COLOR },
+            { roman: 'IV', offset: -1, suffix: 'Maj7', function: 'サブドミナント', isMajor: true, color: SUBDOMINANT_COLOR },
+            { roman: 'IVm7', offset: -1, suffix: '', function: 'サブドミナント・マイナー', isMajor: false, color: SUBDOMINANT_COLOR },
+            { roman: 'V', offset: 1, suffix: '7', function: 'ドミナント', isMajor: true, color: DOMINANT_COLOR },
+            { roman: 'vi', offset: 3, suffix: 'm7', function: 'トニック（代理）', isMajor: false, color: TONIC_COLOR },
+            { roman: 'vii°', offset: 5, suffix: 'm7(♭5)', function: 'ドミナント（代理）', isMajor: false, color: DOMINANT_COLOR },
+            { roman: 'bVII', offset: -2, suffix: 'Maj7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR }
         ];
 
         const minorDegrees = [
-            { roman: 'i', offset: 0, suffix: 'm7', function: 'トニック', isMajor: false, color: '#ffa726' },
-            { roman: 'ii°', offset: 2, suffix: 'm7(♭5)', function: 'サブドミナント（代理）', isMajor: false, color: '#424242' },
-            { roman: 'bIII', offset: 0, suffix: 'Maj7', function: 'トニック（代理）', isMajor: true, color: '#ffb74d' },
-            { roman: 'iv', offset: -1, suffix: 'm7', function: 'サブドミナント', isMajor: false, color: '#ffa726' },
-            { roman: 'v', offset: 1, suffix: 'm7', function: 'ドミナント', isMajor: false, color: '#ffa726' },
-            { roman: 'bVI', offset: -1, suffix: 'Maj7', function: 'サブドミナント（代理）', isMajor: true, color: '#ffb74d' },
-            { roman: 'bVII', offset: 1, suffix: '7', function: 'サブドミナント（代理）', isMajor: true, color: '#ffb74d' }
+            { roman: 'i', offset: 0, suffix: 'm7', function: 'トニック', isMajor: false, color: TONIC_COLOR },
+            { roman: 'ii°', offset: 2, suffix: 'm7(♭5)', function: 'サブドミナント（代理）', isMajor: false, color: SUBDOMINANT_COLOR },
+            { roman: 'bIII', offset: 0, suffix: 'Maj7', function: 'トニック（代理）', isMajor: true, color: TONIC_COLOR },
+            { roman: 'iv', offset: -1, suffix: 'm7', function: 'サブドミナント', isMajor: false, color: SUBDOMINANT_COLOR },
+            { roman: 'v', offset: 1, suffix: 'm7', function: 'ドミナント', isMajor: false, color: DOMINANT_COLOR },
+            { roman: 'bVI', offset: -1, suffix: 'Maj7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR },
+            { roman: 'bVII', offset: 1, suffix: '7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR }
         ];
 
         // よくあるコード進行のプリセット（メジャー・キー）
@@ -511,7 +516,7 @@
                 const fontSize = degree.isMajor ? '14' : '10';
                 text.setAttribute('font-size', fontSize);
                 text.setAttribute('font-weight', 'bold');
-                text.setAttribute('fill', degree.color === '#424242' ? 'white' : '#333');
+                text.setAttribute('fill', degree.color === DOMINANT_COLOR ? 'white' : '#333');
                 text.textContent = degree.roman;
 
                 degreeGroup.appendChild(circle);
