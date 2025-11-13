@@ -15,10 +15,6 @@
             font-family: 'Arial', 'Hiragino Sans', 'Meiryo', sans-serif;
             background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
         }
 
@@ -28,6 +24,18 @@
             text-align: center;
             font-size: 2.5em;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .main-container {
+            display: flex;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        .left-panel {
+            flex-shrink: 0;
         }
 
         .circle-container {
@@ -65,14 +73,13 @@
         }
 
         .info-panel {
-            margin-top: 30px;
+            margin-top: 20px;
             padding: 20px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            min-height: 100px;
             text-align: center;
-            max-width: 600px;
+            width: 700px;
         }
 
         .info-panel h2 {
@@ -84,6 +91,106 @@
             color: #555;
             font-size: 1.1em;
             margin: 8px 0;
+        }
+
+        .right-panel {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            min-width: 500px;
+        }
+
+        .right-panel h2 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .progression-selector {
+            margin-bottom: 30px;
+        }
+
+        .progression-selector label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .progression-selector select {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.1em;
+            border: 2px solid #81c784;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .progression-display {
+            margin-bottom: 30px;
+        }
+
+        .progression-summary {
+            background: #f1f8e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .progression-summary h3 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .progression-summary p {
+            font-size: 1.2em;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .progression-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .progression-table th,
+        .progression-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .progression-table th {
+            background: #2e7d32;
+            color: white;
+            font-weight: bold;
+        }
+
+        .progression-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .progression-table td {
+            color: #333;
+        }
+
+        .function-tonic {
+            color: #ffa726;
+            font-weight: bold;
+        }
+
+        .function-subdominant {
+            color: #42a5f5;
+            font-weight: bold;
+        }
+
+        .function-dominant {
+            color: #ef5350;
+            font-weight: bold;
         }
 
         .degree-circle {
@@ -98,82 +205,138 @@
         text {
             user-select: none;
         }
+
+        .placeholder-message {
+            text-align: center;
+            color: #999;
+            font-size: 1.1em;
+            padding: 40px;
+        }
     </style>
 </head>
 <body>
     <h1>五度圏 (Circle of Fifths)</h1>
 
-    <div class="circle-container">
-        <svg width="700" height="700" id="circle-of-fifths">
-            <!-- SVGはJavaScriptで生成 -->
-        </svg>
-    </div>
+    <div class="main-container">
+        <div class="left-panel">
+            <div class="circle-container">
+                <svg width="700" height="700" id="circle-of-fifths">
+                    <!-- SVGはJavaScriptで生成 -->
+                </svg>
+            </div>
 
-    <div class="info-panel">
-        <h2>キーを選択してください</h2>
-        <p>長調（外側）または短調（中間）のセグメントをクリックすると、詳細情報が表示されます。</p>
+            <div class="info-panel">
+                <h2>キーを選択してください</h2>
+                <p>長調（外側）または短調（中間）のセグメントをクリックすると、詳細情報が表示されます。</p>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <h2>よくあるコード進行</h2>
+
+            <div class="progression-selector">
+                <label for="progression-select">進行を選択:</label>
+                <select id="progression-select">
+                    <option value="">-- 進行を選択してください --</option>
+                    <option value="1625">1625 (I-vi-ii-V)</option>
+                    <option value="4536">4536 (IV-V-iii-vi)</option>
+                    <option value="1456">1456 (I-IV-V-vi)</option>
+                    <option value="1564">1564 (I-V-vi-IV)</option>
+                    <option value="1645">1645 (I-vi-IV-V)</option>
+                </select>
+            </div>
+
+            <div id="progression-content" class="progression-display">
+                <div class="placeholder-message">
+                    キーとコード進行を選択してください
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
         // 五度圏の12キー（12時の位置から時計回り）
         const keys = [
-            { major: 'C', minor: 'Am', sharps: 0, flats: 0, color: '#66bb6a' },
-            { major: 'G', minor: 'Em', sharps: 1, flats: 0, color: '#66bb6a' },
-            { major: 'D', minor: 'Bm', sharps: 2, flats: 0, color: '#66bb6a' },
-            { major: 'A', minor: 'F♯m', sharps: 3, flats: 0, color: '#66bb6a' },
-            { major: 'E', minor: 'C♯m', sharps: 4, flats: 0, color: '#66bb6a' },
-            { major: 'B', minor: 'G♯m', sharps: 5, flats: 0, color: '#66bb6a' },
-            { major: 'G♭/F♯', minor: 'E♭m/D♯m', sharps: 6, flats: 6, color: '#66bb6a' },
-            { major: 'D♭', minor: 'B♭m', sharps: 0, flats: 5, color: '#66bb6a' },
-            { major: 'A♭', minor: 'Fm', sharps: 0, flats: 4, color: '#66bb6a' },
-            { major: 'E♭', minor: 'Cm', sharps: 0, flats: 3, color: '#66bb6a' },
-            { major: 'B♭', minor: 'Gm', sharps: 0, flats: 2, color: '#66bb6a' },
-            { major: 'F', minor: 'Dm', sharps: 0, flats: 1, color: '#66bb6a' }
+            { major: 'C', minor: 'Am', sharps: 0, flats: 0 },
+            { major: 'G', minor: 'Em', sharps: 1, flats: 0 },
+            { major: 'D', minor: 'Bm', sharps: 2, flats: 0 },
+            { major: 'A', minor: 'F♯m', sharps: 3, flats: 0 },
+            { major: 'E', minor: 'C♯m', sharps: 4, flats: 0 },
+            { major: 'B', minor: 'G♯m', sharps: 5, flats: 0 },
+            { major: 'G♭', minor: 'E♭m', sharps: 0, flats: 6 },
+            { major: 'D♭', minor: 'B♭m', sharps: 0, flats: 5 },
+            { major: 'A♭', minor: 'Fm', sharps: 0, flats: 4 },
+            { major: 'E♭', minor: 'Cm', sharps: 0, flats: 3 },
+            { major: 'B♭', minor: 'Gm', sharps: 0, flats: 2 },
+            { major: 'F', minor: 'Dm', sharps: 0, flats: 1 }
         ];
+
+        // 音名の配列（五度圏順、♯系/♭系の両方）
+        const noteNames = [
+            { sharp: 'C', flat: 'C' },
+            { sharp: 'G', flat: 'G' },
+            { sharp: 'D', flat: 'D' },
+            { sharp: 'A', flat: 'A' },
+            { sharp: 'E', flat: 'E' },
+            { sharp: 'B', flat: 'B' },
+            { sharp: 'F♯', flat: 'G♭' },
+            { sharp: 'C♯', flat: 'D♭' },
+            { sharp: 'G♯', flat: 'A♭' },
+            { sharp: 'D♯', flat: 'E♭' },
+            { sharp: 'A♯', flat: 'B♭' },
+            { sharp: 'F', flat: 'F' }
+        ];
+
+        // 音名を取得する関数（キーに応じて♯系/♭系を選択）
+        function getNoteName(index, useSharp) {
+            const note = noteNames[index];
+            return useSharp ? note.sharp : note.flat;
+        }
 
         // ダイアトニックコードのディグリー（五度圏上のオフセット）
         const majorDegrees = [
-            { roman: 'I', offset: 0, color: '#ffa726', isMajor: true },      // トニック
-            { roman: 'ii', offset: 2, color: '#ffa726', isMajor: false },    // 完全5度×2
-            { roman: 'iii', offset: 4, color: '#ffa726', isMajor: false },   // 完全5度×4
-            { roman: 'IV', offset: -1, color: '#ffb74d', isMajor: true },    // 完全4度上
-            { roman: 'V', offset: 1, color: '#ffb74d', isMajor: true },      // 完全5度上
-            { roman: 'vi', offset: 3, color: '#ffa726', isMajor: false },    // 完全5度×3
-            { roman: 'vii°', offset: 5, color: '#424242', isMajor: false }   // 完全5度×5
+            { roman: 'I', offset: 0, suffix: 'Maj7', function: 'トニック', isMajor: true, color: '#ffa726' },
+            { roman: 'ii', offset: 2, suffix: 'm7', function: 'サブドミナント', isMajor: false, color: '#ffa726' },
+            { roman: 'iii', offset: 4, suffix: 'm7', function: 'トニック（代理）', isMajor: false, color: '#ffa726' },
+            { roman: 'IV', offset: -1, suffix: 'Maj7', function: 'サブドミナント', isMajor: true, color: '#ffb74d' },
+            { roman: 'V', offset: 1, suffix: '7', function: 'ドミナント', isMajor: true, color: '#ffb74d' },
+            { roman: 'vi', offset: 3, suffix: 'm7', function: 'トニック（代理）', isMajor: false, color: '#ffa726' },
+            { roman: 'vii°', offset: 5, suffix: 'm7(♭5)', function: 'ドミナント（代理）', isMajor: false, color: '#424242' }
         ];
 
         const minorDegrees = [
-            { roman: 'i', offset: 0, color: '#ffa726', isMajor: false },      // Im7
-            { roman: 'ii°', offset: 2, color: '#424242', isMajor: false },    // IIm7(b5)
-            { roman: 'bIII', offset: 0, color: '#ffb74d', isMajor: true },    // bIIIMaj7（平行長調）
-            { roman: 'iv', offset: -1, color: '#ffa726', isMajor: false },    // IVm7
-            { roman: 'v', offset: 1, color: '#ffa726', isMajor: false },      // Vm7（マイナー！）
-            { roman: 'bVI', offset: -1, color: '#ffb74d', isMajor: true },    // bVIMaj7
-            { roman: 'bVII', offset: 1, color: '#ffb74d', isMajor: true }     // bVII7
+            { roman: 'i', offset: 0, suffix: 'm7', function: 'トニック', isMajor: false, color: '#ffa726' },
+            { roman: 'ii°', offset: 2, suffix: 'm7(♭5)', function: 'サブドミナント（代理）', isMajor: false, color: '#424242' },
+            { roman: 'bIII', offset: 0, suffix: 'Maj7', function: 'トニック（代理）', isMajor: true, color: '#ffb74d' },
+            { roman: 'iv', offset: -1, suffix: 'm7', function: 'サブドミナント', isMajor: false, color: '#ffa726' },
+            { roman: 'v', offset: 1, suffix: 'm7', function: 'ドミナント', isMajor: false, color: '#ffa726' },
+            { roman: 'bVI', offset: -1, suffix: 'Maj7', function: 'サブドミナント（代理）', isMajor: true, color: '#ffb74d' },
+            { roman: 'bVII', offset: 1, suffix: '7', function: 'サブドミナント（代理）', isMajor: true, color: '#ffb74d' }
         ];
+
+        // よくあるコード進行のプリセット
+        const progressions = {
+            '1625': { name: '1625', degrees: ['I', 'vi', 'ii', 'V'] },
+            '4536': { name: '4536', degrees: ['IV', 'V', 'iii', 'vi'] },
+            '1456': { name: '1456 (循環コード)', degrees: ['I', 'IV', 'V', 'vi'] },
+            '1564': { name: '1564', degrees: ['I', 'V', 'vi', 'IV'] },
+            '1645': { name: '1645', degrees: ['I', 'vi', 'IV', 'V'] }
+        };
 
         const svg = document.getElementById('circle-of-fifths');
         const centerX = 350;
         const centerY = 350;
-        const outerRadius = 280;   // 長調のセグメント外径
-        const innerMajorRadius = 200; // 長調のセグメント内径
-        const innerMinorRadius = 200; // 短調のセグメント外径
-        const centerMinorRadius = 120; // 短調のセグメント内径
-        const degreeRadius = 80;    // ディグリー円の半径
-        const degreeCircleRadius = 25; // ディグリーの円の大きさ
+        const outerRadius = 280;
+        const innerMajorRadius = 200;
+        const innerMinorRadius = 200;
+        const centerMinorRadius = 120;
+        const degreeCircleRadius = 25;
+        const anglePerSegment = 30;
 
-        const anglePerSegment = 30; // 360度 / 12
-
-        // パス描画用の関数
-        function describeArc(x, y, radius, startAngle, endAngle) {
-            const start = polarToCartesian(x, y, radius, endAngle);
-            const end = polarToCartesian(x, y, radius, startAngle);
-            const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
-            return [
-                "M", start.x, start.y,
-                "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y
-            ].join(" ");
-        }
+        // 現在の選択状態
+        let currentKey = null;
+        let currentType = null;
+        let currentKeyIndex = null;
 
         function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
             const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
@@ -188,7 +351,6 @@
             const endOuter = polarToCartesian(cx, cy, outerR, endAngle);
             const startInner = polarToCartesian(cx, cy, innerR, endAngle);
             const endInner = polarToCartesian(cx, cy, innerR, startAngle);
-
             const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
 
             return [
@@ -206,7 +368,7 @@
             const endAngle = startAngle + anglePerSegment;
             const midAngle = startAngle + anglePerSegment / 2;
 
-            // 長調セグメント（外側、濃い緑）
+            // 長調セグメント
             const majorPath = createSegmentPath(centerX, centerY, innerMajorRadius, outerRadius, startAngle, endAngle);
             const majorSegment = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             majorSegment.setAttribute('d', majorPath);
@@ -231,7 +393,7 @@
             majorText.textContent = key.major;
             svg.appendChild(majorText);
 
-            // 短調セグメント（中間、薄い緑）
+            // 短調セグメント
             const minorPath = createSegmentPath(centerX, centerY, centerMinorRadius, innerMinorRadius, startAngle, endAngle);
             const minorSegment = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             minorSegment.setAttribute('d', minorPath);
@@ -244,11 +406,11 @@
             minorSegment.setAttribute('data-index', index);
             svg.appendChild(minorSegment);
 
-            // 短調のテキスト（上にずらす）
+            // 短調のテキスト
             const minorTextPos = polarToCartesian(centerX, centerY, (innerMinorRadius + centerMinorRadius) / 2, midAngle);
             const minorText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             minorText.setAttribute('x', minorTextPos.x);
-            minorText.setAttribute('y', minorTextPos.y - 8); // もっと上にずらす
+            minorText.setAttribute('y', minorTextPos.y - 8);
             minorText.setAttribute('text-anchor', 'middle');
             minorText.setAttribute('font-size', '16');
             minorText.setAttribute('fill', '#1b5e20');
@@ -256,8 +418,8 @@
             svg.appendChild(minorText);
 
             // クリックイベント
-            majorSegment.addEventListener('click', () => selectKey(key, 'major', majorSegment));
-            minorSegment.addEventListener('click', () => selectKey(key, 'minor', minorSegment));
+            majorSegment.addEventListener('click', () => selectKey(key, 'major', majorSegment, index));
+            minorSegment.addEventListener('click', () => selectKey(key, 'minor', minorSegment, index));
         });
 
         // 中央の白い円
@@ -270,54 +432,43 @@
 
         // キー選択
         let selectedElement = null;
-        let degreeElements = []; // ディグリー表示を保存
+        let degreeElements = [];
 
-        function selectKey(key, type, element) {
-            // 前の選択を解除
+        function selectKey(key, type, element, index) {
             if (selectedElement) {
                 selectedElement.classList.remove('selected');
             }
 
-            // 前のディグリー表示を削除
             degreeElements.forEach(el => el.remove());
             degreeElements = [];
 
-            // 新しい選択
             element.classList.add('selected');
             selectedElement = element;
 
-            // 選択されたキーのインデックスを取得
-            const selectedIndex = parseInt(element.getAttribute('data-index'));
+            currentKey = key;
+            currentType = type;
+            currentKeyIndex = index;
 
-            // ディグリーの配列を選択（長調 or 短調）
+            const selectedIndex = parseInt(element.getAttribute('data-index'));
             const degreesToShow = type === 'major' ? majorDegrees : minorDegrees;
 
-            // ディグリーを五度圏上に配置
             degreesToShow.forEach((degree) => {
-                // 五度圏上のコードの根音の位置を計算
                 let targetIndex = (selectedIndex + degree.offset + 12) % 12;
 
-                // 長調選択時のみ：マイナーコードは短調リングに表示（+9ステップ）
-                // 短調選択時：そのままの位置を使用
                 if (type === 'major' && !degree.isMajor) {
                     targetIndex = (targetIndex + 9) % 12;
                 }
 
-                // セグメントの中央角度を計算
                 const startAngle = targetIndex * anglePerSegment;
                 const midAngle = startAngle + anglePerSegment / 2;
 
-                // 配置する半径（メジャーコードは外側、マイナーコードは内側の短調リングに）
                 let displayRadius;
                 if (degree.isMajor) {
-                    // メジャーコード：外側のさらに外（キー名と重ならないように）
                     displayRadius = outerRadius + 30;
                 } else {
-                    // マイナーコード・ディミニッシュ：短調のリングに表示
                     displayRadius = (innerMinorRadius + centerMinorRadius) / 2;
                 }
 
-                // 位置を計算
                 const pos = polarToCartesian(centerX, centerY, displayRadius, midAngle);
 
                 const degreeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -325,23 +476,19 @@
 
                 const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                 circle.setAttribute('cx', pos.x);
-                // マイナーコードの円を下にずらす
                 circle.setAttribute('cy', degree.isMajor ? pos.y : pos.y + 15);
-                // マイナーコードの円はもっと小さくする
                 const circleRadius = degree.isMajor ? degreeCircleRadius : 18;
                 circle.setAttribute('r', circleRadius);
                 circle.setAttribute('fill', degree.color);
-                circle.setAttribute('fill-opacity', degree.isMajor ? '1' : '0.8'); // マイナーコードは透明に
+                circle.setAttribute('fill-opacity', degree.isMajor ? '1' : '0.8');
                 circle.setAttribute('stroke', 'white');
                 circle.setAttribute('stroke-width', '2');
 
                 const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                 text.setAttribute('x', pos.x);
-                // マイナーコードは円の位置に合わせて下にずらす
                 const textY = degree.isMajor ? pos.y + 5 : pos.y + 15 + 4;
                 text.setAttribute('y', textY);
                 text.setAttribute('text-anchor', 'middle');
-                // マイナーコードのフォントをもっと小さくする
                 const fontSize = degree.isMajor ? '14' : '10';
                 text.setAttribute('font-size', fontSize);
                 text.setAttribute('font-weight', 'bold');
@@ -381,7 +528,93 @@
                     <strong>ダイアトニックコード:</strong> 五度圏上に表示されています
                 </p>
             `;
+
+            updateProgressionDisplay();
         }
+
+        // コード進行パネルの更新
+        function updateProgressionDisplay() {
+            const progressionSelect = document.getElementById('progression-select');
+            const selectedProgression = progressionSelect.value;
+
+            if (!currentKey || !selectedProgression) {
+                return;
+            }
+
+            const progression = progressions[selectedProgression];
+            const degreesData = currentType === 'major' ? majorDegrees : minorDegrees;
+
+            // キー名から♯系/♭系を判定
+            const keyName = currentType === 'major' ? currentKey.major : currentKey.minor;
+            const useSharp = !keyName.includes('♭');
+
+            // 進行のディグリーに対応するコード情報を取得
+            const chords = progression.degrees.map(degreeRoman => {
+                const degreeInfo = degreesData.find(d => d.roman === degreeRoman);
+                if (!degreeInfo) return null;
+
+                const rootIndex = (currentKeyIndex + degreeInfo.offset + 12) % 12;
+                const rootNote = getNoteName(rootIndex, useSharp);
+                const chordName = rootNote + degreeInfo.suffix;
+
+                return {
+                    degree: degreeInfo.roman + degreeInfo.suffix,
+                    function: degreeInfo.function,
+                    chord: chordName,
+                    notes: rootNote
+                };
+            }).filter(c => c !== null);
+
+            const chordsString = chords.map(c => c.chord).join(' - ');
+            const degreesString = chords.map(c => c.degree).join(' - ');
+
+            const displayKeyName = currentType === 'major' ? currentKey.major : currentKey.minor;
+
+            let tableHTML = `
+                <div class="progression-summary">
+                    <h3>${progression.name}</h3>
+                    <p><strong>ディグリー:</strong> ${degreesString}</p>
+                    <p><strong>キー${displayKeyName}:</strong> ${chordsString}</p>
+                </div>
+
+                <table class="progression-table">
+                    <thead>
+                        <tr>
+                            <th>ディグリー</th>
+                            <th>機能</th>
+                            <th>コード</th>
+                            <th>根音</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            chords.forEach(chord => {
+                let functionClass = '';
+                if (chord.function.includes('トニック')) functionClass = 'function-tonic';
+                else if (chord.function.includes('サブドミナント')) functionClass = 'function-subdominant';
+                else if (chord.function.includes('ドミナント')) functionClass = 'function-dominant';
+
+                tableHTML += `
+                    <tr>
+                        <td>${chord.degree}</td>
+                        <td class="${functionClass}">${chord.function}</td>
+                        <td><strong>${chord.chord}</strong></td>
+                        <td>${chord.notes}</td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            document.getElementById('progression-content').innerHTML = tableHTML;
+        }
+
+        // 進行選択のイベントリスナー
+        document.getElementById('progression-select').addEventListener('change', updateProgressionDisplay);
     </script>
 </body>
 </html>

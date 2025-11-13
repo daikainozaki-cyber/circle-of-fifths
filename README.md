@@ -55,11 +55,57 @@
 
 ---
 
-## デプロイ方法（将来）
+## 開発フロー（重要）
 
-1. GitHub Pagesにホスティング
-2. または Netlify / Vercel で公開
-3. HPSメンバーにURLを共有
+### 基本ルール
+**動作確認してから公開する！**
+
+### 手順
+
+1. **機能を追加・修正する**
+   - `index.html` を編集
+
+2. **gitにコミット（バージョン保存）**
+   ```bash
+   cd "/Users/nozakidaikai/Obsidian/デジタル百姓総本部/プロジェクト/五度圏アプリ"
+   git add .
+   git commit -m "v0.x: 機能追加の説明"
+   ```
+
+3. **ローカルで動作確認**
+   - Finderで `index.html` をダブルクリック
+   - ブラウザで動作を確認
+   - **問題があれば修正 → gitコミット → 再確認**
+
+4. **動作OKなら本番公開（Netlify）**
+   ```bash
+   netlify deploy --prod --message "v0.x: 機能追加の説明"
+   ```
+
+5. **公開URLで確認**
+   - https://delightful-pie-ee8f76.netlify.app
+   - 問題なければ完了！
+
+### 巻き戻し方法
+
+もし問題があったら、gitで前のバージョンに戻せます：
+
+```bash
+# コミット履歴を確認
+git log --oneline
+
+# 特定のバージョンに戻す
+git checkout <コミットID>
+
+# 再度公開
+netlify deploy --prod
+```
+
+---
+
+## 公開URL
+
+**本番**: https://delightful-pie-ee8f76.netlify.app
 
 ---
 
