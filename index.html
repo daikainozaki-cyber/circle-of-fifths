@@ -15,20 +15,20 @@
             font-family: 'Arial', 'Hiragino Sans', 'Meiryo', sans-serif;
             background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
 
         h1 {
             color: #2e7d32;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             text-align: center;
-            font-size: 2.5em;
+            font-size: 2.2em;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         .main-container {
             display: flex;
-            gap: 30px;
+            gap: 20px;
             max-width: 1400px;
             margin: 0 auto;
             align-items: flex-start;
@@ -41,7 +41,7 @@
         .circle-container {
             background: white;
             border-radius: 20px;
-            padding: 40px;
+            padding: 30px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.2);
         }
 
@@ -73,8 +73,8 @@
         }
 
         .info-panel {
-            margin-top: 20px;
-            padding: 20px;
+            margin-top: 15px;
+            padding: 15px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
@@ -84,45 +84,47 @@
 
         .info-panel h2 {
             color: #2e7d32;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            font-size: 1.4em;
         }
 
         .info-panel p {
             color: #555;
-            font-size: 1.1em;
-            margin: 8px 0;
+            font-size: 1em;
+            margin: 6px 0;
         }
 
         .right-panel {
             flex: 1;
             background: white;
             border-radius: 20px;
-            padding: 30px;
+            padding: 25px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.2);
             min-width: 500px;
         }
 
         .right-panel h2 {
             color: #2e7d32;
-            margin-bottom: 20px;
-            font-size: 1.8em;
+            margin-bottom: 15px;
+            font-size: 1.6em;
         }
 
         .progression-selector {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .progression-selector label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-weight: bold;
             color: #2e7d32;
+            font-size: 0.95em;
         }
 
         .progression-selector select {
             width: 100%;
-            padding: 10px;
-            font-size: 1.1em;
+            padding: 8px;
+            font-size: 1em;
             border: 2px solid #81c784;
             border-radius: 8px;
             background: white;
@@ -130,38 +132,40 @@
         }
 
         .progression-display {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .progression-summary {
             background: #f1f8e9;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
         }
 
         .progression-summary h3 {
             color: #2e7d32;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 1.1em;
         }
 
         .progression-summary p {
-            font-size: 1.2em;
+            font-size: 1em;
             color: #555;
-            margin: 5px 0;
+            margin: 3px 0;
         }
 
         .progression-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .progression-table th,
         .progression-table td {
-            padding: 12px;
+            padding: 6px 8px;
             text-align: left;
             border-bottom: 1px solid #ddd;
+            font-size: 0.9em;
         }
 
         .progression-table th {
@@ -214,18 +218,17 @@
         }
 
         .diatonic-panel {
-            margin-top: 20px;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            width: 700px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f1f8e9;
+            border-radius: 8px;
         }
 
         .diatonic-panel h3 {
             color: #2e7d32;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             text-align: center;
+            font-size: 1.2em;
         }
 
         .diatonic-table {
@@ -235,9 +238,10 @@
 
         .diatonic-table th,
         .diatonic-table td {
-            padding: 12px;
+            padding: 6px 8px;
             text-align: left;
             border-bottom: 1px solid #ddd;
+            font-size: 0.9em;
         }
 
         .diatonic-table th {
@@ -256,7 +260,6 @@
 
         .diatonic-table td:first-child {
             font-weight: bold;
-            font-size: 1.1em;
         }
     </style>
 </head>
@@ -275,6 +278,10 @@
                 <h2>キーを選択してください</h2>
                 <p>長調（外側）または短調（中間）のセグメントをクリックすると、詳細情報が表示されます。</p>
             </div>
+        </div>
+
+        <div class="right-panel">
+            <h2>よくあるコード進行</h2>
 
             <div class="diatonic-panel" id="diatonic-panel" style="display: none;">
                 <h3>ダイアトニックコード</h3>
@@ -291,10 +298,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        <div class="right-panel">
-            <h2>よくあるコード進行</h2>
 
             <div class="progression-selector">
                 <label for="progression-select">進行を選択:</label>
@@ -622,9 +625,6 @@
                 <h2>${keyName} ${keyType}</h2>
                 <p><strong>調号:</strong> ${accidentals}</p>
                 <p>${parallel}</p>
-                <p style="margin-top: 15px; color: #2e7d32; font-size: 1em;">
-                    <strong>ダイアトニックコード:</strong> 五度圏上に表示されています
-                </p>
             `;
 
             updateProgressionSelect();
