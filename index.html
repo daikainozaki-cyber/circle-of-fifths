@@ -212,6 +212,52 @@
             font-size: 1.1em;
             padding: 40px;
         }
+
+        .diatonic-panel {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 700px;
+        }
+
+        .diatonic-panel h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .diatonic-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .diatonic-table th,
+        .diatonic-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .diatonic-table th {
+            background: #2e7d32;
+            color: white;
+            font-weight: bold;
+        }
+
+        .diatonic-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .diatonic-table td {
+            color: #333;
+        }
+
+        .diatonic-table td:first-child {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
     </style>
 </head>
 <body>
@@ -228,6 +274,22 @@
             <div class="info-panel">
                 <h2>キーを選択してください</h2>
                 <p>長調（外側）または短調（中間）のセグメントをクリックすると、詳細情報が表示されます。</p>
+            </div>
+
+            <div class="diatonic-panel" id="diatonic-panel" style="display: none;">
+                <h3>ダイアトニックコード</h3>
+                <table class="diatonic-table">
+                    <thead>
+                        <tr>
+                            <th>ディグリー</th>
+                            <th>コード名</th>
+                            <th>機能</th>
+                        </tr>
+                    </thead>
+                    <tbody id="diatonic-tbody">
+                        <!-- JavaScriptで動的に生成 -->
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -567,6 +629,57 @@
 
             updateProgressionSelect();
             updateProgressionDisplay();
+            updateDiatonicTable(key, type, index);
+        }
+
+        // ダイアトニックコード一覧表の更新
+        function updateDiatonicTable(key, type, keyIndex) {
+            const diatonicPanel = document.getElementById('diatonic-panel');
+            const diatonicTbody = document.getElementById('diatonic-tbody');
+
+            // パネルを表示
+            diatonicPanel.style.display = 'block';
+
+            // テーブルの内容をクリア
+            diatonicTbody.innerHTML = '';
+
+            // 選択されたキーのダイアトニックコードを取得
+            const allDegrees = type === 'major' ? majorDegrees : minorDegrees;
+            const majorDiatonicOnly = ['IMaj7', 'iim7', 'iiim7', 'IVMaj7', 'V7', 'vim7', 'vii°m7(♭5)'];
+            const minorDiatonicOnly = ['im7', 'iim7(♭5)', 'bIIIMaj7', 'ivm7', 'vm7', 'V7', 'bVIMaj7', 'bVIIMaj7'];
+            const diatonicOnly = type === 'major' ? majorDiatonicOnly : minorDiatonicOnly;
+            const degreesToShow = allDegrees.filter(d => diatonicOnly.includes(d.roman + d.suffix));
+
+            // 異名同音判定
+            const useSharp = key.sharps > 0;
+
+            // 各ダイアトニックコードを表示
+            degreesToShow.forEach((degree) => {
+                // コード名を計算
+                const baseIndex = type === 'minor' ? (keyIndex + 3) % 12 : keyIndex;
+                const rootIndex = (baseIndex + degree.offset + 12) % 12;
+                const rootNote = getNoteName(rootIndex, useSharp);
+                const chordName = rootNote + degree.suffix;
+
+                // 機能のクラス名
+                let functionClass = '';
+                if (degree.function.includes('トニック')) {
+                    functionClass = 'function-tonic';
+                } else if (degree.function.includes('サブドミナント')) {
+                    functionClass = 'function-subdominant';
+                } else if (degree.function.includes('ドミナント')) {
+                    functionClass = 'function-dominant';
+                }
+
+                // テーブル行を作成
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${degree.roman + degree.suffix}</td>
+                    <td><strong>${chordName}</strong></td>
+                    <td class="${functionClass}">${degree.function}</td>
+                `;
+                diatonicTbody.appendChild(tr);
+            });
         }
 
         // コード進行セレクトの更新（メジャー/マイナーに応じて）
