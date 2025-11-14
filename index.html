@@ -552,6 +552,9 @@
         let degreeElements = [];
 
         function selectKey(key, type, element, index) {
+            // 前回のタイプを保存（メジャー/マイナーの切り替え判定用）
+            const previousType = currentType;
+
             if (selectedElement) {
                 selectedElement.classList.remove('selected');
             }
@@ -654,7 +657,9 @@
                 <p>${parallel}</p>
             `;
 
-            updateProgressionSelect();
+            // タイプが変わった場合のみ進行選択をクリア
+            const typeChanged = previousType !== null && previousType !== type;
+            updateProgressionSelect(typeChanged);
             updateProgressionDisplay();
             updateDiatonicTable(key, type, index);
         }
@@ -710,8 +715,9 @@
         }
 
         // コード進行セレクトの更新（メジャー/マイナーに応じて）
-        function updateProgressionSelect() {
+        function updateProgressionSelect(shouldClear = false) {
             const progressionSelect = document.getElementById('progression-select');
+            const currentSelection = progressionSelect.value; // 現在の選択を保存
             const progressions = currentType === 'major' ? majorProgressions : minorProgressions;
 
             // ドロップダウンを再構築
@@ -724,13 +730,18 @@
                 progressionSelect.appendChild(option);
             });
 
-            // 表示をクリア
-            const progressionContent = document.getElementById('progression-content');
-            progressionContent.innerHTML = `
-                <div class="placeholder-message">
-                    キーとコード進行を選択してください
-                </div>
-            `;
+            // タイプが変わらなければ選択を維持
+            if (!shouldClear && currentSelection) {
+                progressionSelect.value = currentSelection;
+            } else {
+                // 表示をクリア
+                const progressionContent = document.getElementById('progression-content');
+                progressionContent.innerHTML = `
+                    <div class="placeholder-message">
+                        キーとコード進行を選択してください
+                    </div>
+                `;
+            }
         }
 
         // コード進行パネルの更新
