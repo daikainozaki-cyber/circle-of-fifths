@@ -364,7 +364,7 @@
             { roman: 'V', offset: 1, suffix: '7', function: 'ドミナント', isMajor: true, color: DOMINANT_COLOR },
             { roman: 'vi', offset: 3, suffix: 'm7', function: 'トニック（代理）', isMajor: false, color: TONIC_COLOR },
             { roman: 'vii°', offset: 5, suffix: 'm7(♭5)', function: 'ドミナント（代理）', isMajor: false, color: DOMINANT_COLOR },
-            { roman: 'bVII', offset: -2, suffix: 'Maj7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR }
+            { roman: 'bVII', offset: -2, suffix: '7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR }
         ];
 
         const minorDegrees = [
@@ -378,7 +378,7 @@
             { roman: 'v', offset: 1, circleOffset: 1, suffix: 'm7', function: 'ドミナント（ナチュラル）', isMajor: false, color: DOMINANT_COLOR },
             { roman: 'bVI', offset: -4, circleOffset: -1, suffix: 'Maj7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR },
             { roman: 'VII', offset: 5, circleOffset: 5, suffix: 'dim7', function: 'ドミナント（代理）', isMajor: false, color: DOMINANT_COLOR },
-            { roman: 'bVII', offset: -2, circleOffset: 1, suffix: 'Maj7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR },
+            { roman: 'bVII', offset: -2, circleOffset: 1, suffix: '7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR },
             { roman: 'bVII', offset: -2, circleOffset: 1, suffix: '7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR },
             { roman: 'I', offset: 0, circleOffset: 0, suffix: '7', function: 'セカンダリー・ドミナント (V7/IV)', isMajor: true, color: DOMINANT_COLOR }
         ];
@@ -394,7 +394,7 @@
             '1625': { name: '1625進行 (I-VI-II-V)', degrees: ['IMaj7', 'vim7', 'iim7', 'V7'] },
             '4536': { name: 'IV-V-III-VI', degrees: ['IVMaj7', 'V7', 'iiim7', 'vim7'] },
             '1345': { name: 'I-III-IV-V', degrees: ['IMaj7', 'iiim7', 'IVMaj7', 'V7'] },
-            '1b741': { name: 'I-bVII-IV-I', degrees: ['IMaj7', 'bVIIMaj7', 'IVMaj7', 'IMaj7'] }
+            '1b741': { name: 'I-bVII-IV-I', degrees: ['IMaj7', 'bVII7', 'IVMaj7', 'IMaj7'] }
         };
 
         // よくあるコード進行のプリセット（マイナー・キー）
@@ -572,7 +572,7 @@
 
             // 五度圏上には基本的なダイアトニックコードのみ表示
             const majorDiatonicOnly = ['IMaj7', 'iim7', 'iiim7', 'IVMaj7', 'V7', 'vim7', 'vii°m7(♭5)'];
-            const minorDiatonicOnly = ['im7', 'iim7(♭5)', 'bIIIMaj7', 'ivm7', 'vm7', 'bVIMaj7', 'bVIIMaj7'];
+            const minorDiatonicOnly = ['im7', 'iim7(♭5)', 'bIIIMaj7', 'ivm7', 'vm7', 'bVIMaj7', 'bVII7'];
             const diatonicOnly = type === 'major' ? majorDiatonicOnly : minorDiatonicOnly;
             const degreesToShow = allDegrees.filter(d => diatonicOnly.includes(d.roman + d.suffix));
 
@@ -674,7 +674,7 @@
             // 選択されたキーのダイアトニックコードを取得
             const allDegrees = type === 'major' ? majorDegrees : minorDegrees;
             const majorDiatonicOnly = ['IMaj7', 'iim7', 'iiim7', 'IVMaj7', 'V7', 'vim7', 'vii°m7(♭5)'];
-            const minorDiatonicOnly = ['im7', 'iim7(♭5)', 'bIIIMaj7', 'ivm7', 'vm7', 'V7', 'bVIMaj7', 'bVIIMaj7'];
+            const minorDiatonicOnly = ['im7', 'iim7(♭5)', 'bIIIMaj7', 'ivm7', 'vm7', 'V7', 'bVIMaj7', 'bVII7'];
             const diatonicOnly = type === 'major' ? majorDiatonicOnly : minorDiatonicOnly;
             const degreesToShow = allDegrees.filter(d => diatonicOnly.includes(d.roman + d.suffix));
 
