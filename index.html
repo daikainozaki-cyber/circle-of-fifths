@@ -363,7 +363,7 @@
             { roman: 'IV', offset: -1, suffix: 'm7', function: 'サブドミナント・マイナー', isMajor: false, color: SUBDOMINANT_COLOR },
             { roman: 'V', offset: 1, suffix: '7', function: 'ドミナント', isMajor: true, color: DOMINANT_COLOR },
             { roman: 'vi', offset: 3, suffix: 'm7', function: 'トニック（代理）', isMajor: false, color: TONIC_COLOR },
-            { roman: 'vii°', offset: 5, suffix: 'm7(♭5)', function: 'ドミナント（代理）', isMajor: false, color: DOMINANT_COLOR },
+            { roman: 'vii', offset: 5, suffix: 'm7(b5)', function: 'ドミナント（代理）', isMajor: false, color: DOMINANT_COLOR },
             { roman: 'bVII', offset: -2, suffix: '7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR }
         ];
 
@@ -573,7 +573,7 @@
             const allDegrees = type === 'major' ? majorDegrees : minorDegrees;
 
             // 五度圏上には基本的なダイアトニックコードのみ表示
-            const majorDiatonicOnly = ['IMaj7', 'iim7', 'iiim7', 'IVMaj7', 'V7', 'vim7', 'vii°m7(♭5)'];
+            const majorDiatonicOnly = ['IMaj7', 'iim7', 'iiim7', 'IVMaj7', 'V7', 'vim7', 'viim7(b5)'];
             const minorDiatonicOnly = ['im7', 'iim7(♭5)', 'bIIIMaj7', 'ivm7', 'vm7', 'bVIMaj7', 'bVII7'];
             const diatonicOnly = type === 'major' ? majorDiatonicOnly : minorDiatonicOnly;
             const degreesToShow = allDegrees.filter(d => diatonicOnly.includes(d.roman + d.suffix));
@@ -677,7 +677,7 @@
 
             // 選択されたキーのダイアトニックコードを取得
             const allDegrees = type === 'major' ? majorDegrees : minorDegrees;
-            const majorDiatonicOnly = ['IMaj7', 'iim7', 'iiim7', 'IVMaj7', 'V7', 'vim7', 'vii°m7(♭5)'];
+            const majorDiatonicOnly = ['IMaj7', 'iim7', 'iiim7', 'IVMaj7', 'V7', 'vim7', 'viim7(b5)'];
             const minorDiatonicOnly = ['im7', 'iim7(♭5)', 'bIIIMaj7', 'ivm7', 'vm7', 'V7', 'bVIMaj7', 'bVII7'];
             const diatonicOnly = type === 'major' ? majorDiatonicOnly : minorDiatonicOnly;
             const degreesToShow = allDegrees.filter(d => diatonicOnly.includes(d.roman + d.suffix));
