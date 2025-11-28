@@ -416,24 +416,38 @@
                 max-width: none;
             }
 
+            .left-panel {
+                scroll-snap-align: center;
+                min-width: calc(100vw - 20px);
+                flex-shrink: 0;
+                padding: 0;
+            }
+
             .circle-container {
-                padding: 10px;
+                padding: 5px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                overflow: visible;
             }
 
             svg {
-                width: 85vw;
-                height: 85vw;
-                max-width: 380px;
-                max-height: 380px;
-                flex-shrink: 0;
+                width: 92vw;
+                height: 92vw;
+                max-width: 360px;
+                max-height: 360px;
             }
 
             .info-panel {
-                padding: 10px 15px;
+                padding: 8px 10px;
+                margin-top: 8px;
+            }
+
+            .info-panel h2 {
+                font-size: 1.1em;
+            }
+
+            .info-panel p {
+                font-size: 0.85em;
             }
         }
     </style>
