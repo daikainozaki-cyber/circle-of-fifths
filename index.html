@@ -782,7 +782,12 @@
         const innerMajorRadius = 200;
         const innerMinorRadius = 200;
         const centerMinorRadius = 120;
-        const degreeCircleRadius = 25;
+        // モバイル判定とサイズ調整
+        const isMobile = window.innerWidth <= 900;
+        const degreeCircleRadius = isMobile ? 18 : 25;
+        const minorCircleRadius = isMobile ? 12 : 16;
+        const majorFontSize = isMobile ? '11' : '14';
+        const minorFontSize = isMobile ? '8' : '10';
         const anglePerSegment = 30;
 
         // 現在の選択状態
@@ -1111,7 +1116,7 @@
                 const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                 circle.setAttribute('cx', pos.x);
                 circle.setAttribute('cy', degree.isMajor ? pos.y : pos.y + 15);
-                const circleRadius = degree.isMajor ? degreeCircleRadius : 16;
+                const circleRadius = degree.isMajor ? degreeCircleRadius : minorCircleRadius;
                 circle.setAttribute('r', circleRadius);
 
                 // 裏コードもドミナント系なので同じ色
@@ -1126,7 +1131,7 @@
                 text.setAttribute('y', textY);
                 text.setAttribute('text-anchor', 'middle');
                 text.setAttribute('dominant-baseline', 'middle');
-                const fontSize = degree.isMajor ? '14' : '10';
+                const fontSize = degree.isMajor ? majorFontSize : minorFontSize;
                 text.setAttribute('font-size', fontSize);
                 text.setAttribute('font-weight', '600');
                 // 裏コードとドミナント系は白文字
