@@ -1088,11 +1088,6 @@
             const degreesToShow = type === 'major' ? majorCircleChords : minorCircleChords;
 
             degreesToShow.forEach((degree) => {
-                // モバイルではマイナーコードのディグリーは非表示（読みにくいため）
-                if (isMobile && !degree.isMajor) {
-                    return;
-                }
-
                 // 五度圏表示用はcircleOffsetを使用（なければoffset）
                 const displayOffset = degree.circleOffset !== undefined ? degree.circleOffset : degree.offset;
                 let targetIndex = (selectedIndex + displayOffset + 12) % 12;
@@ -1111,8 +1106,8 @@
                 } else if (degree.isMajor) {
                     displayRadius = outerRadius + 30;
                 } else {
-                    // マイナーコードのディグリーは中心寄りに配置
-                    displayRadius = (innerMinorRadius + centerMinorRadius) / 2 - 5;
+                    // マイナーコードのディグリーは中心の白い円の中に配置
+                    displayRadius = isMobile ? 75 : ((innerMinorRadius + centerMinorRadius) / 2 - 5);
                 }
 
                 const pos = polarToCartesian(centerX, centerY, displayRadius, midAngle);
@@ -1122,7 +1117,9 @@
 
                 const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                 circle.setAttribute('cx', pos.x);
-                circle.setAttribute('cy', degree.isMajor ? pos.y : pos.y + 15);
+                // モバイルで中心配置の場合はY位置のオフセットなし
+                const yOffset = (!degree.isMajor && isMobile) ? 0 : (degree.isMajor ? 0 : 15);
+                circle.setAttribute('cy', pos.y + yOffset);
                 const circleRadius = degree.isMajor ? degreeCircleRadius : minorCircleRadius;
                 circle.setAttribute('r', circleRadius);
 
@@ -1134,8 +1131,8 @@
 
                 const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                 text.setAttribute('x', pos.x);
-                const textY = degree.isMajor ? pos.y + 5 : pos.y + 15 + 4;
-                text.setAttribute('y', textY);
+                const textYOffset = (!degree.isMajor && isMobile) ? 4 : (degree.isMajor ? 5 : 19);
+                text.setAttribute('y', pos.y + textYOffset);
                 text.setAttribute('text-anchor', 'middle');
                 text.setAttribute('dominant-baseline', 'middle');
                 const fontSize = degree.isMajor ? majorFontSize : minorFontSize;
