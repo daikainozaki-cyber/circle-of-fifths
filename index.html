@@ -1106,8 +1106,8 @@
                 } else if (degree.isMajor) {
                     displayRadius = outerRadius + 30;
                 } else {
-                    // マイナーコードのディグリーは白い中心円のすぐ外側に配置
-                    displayRadius = centerMinorRadius + minorCircleRadius;
+                    // マイナーコードのディグリーは白い中心円に外接（ギリギリ接する位置）
+                    displayRadius = centerMinorRadius + 3;
                 }
 
                 const pos = polarToCartesian(centerX, centerY, displayRadius, midAngle);
