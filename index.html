@@ -374,7 +374,7 @@
             body {
                 flex-direction: column;
                 align-items: stretch;
-                padding: 5px;
+                padding: 2px;
                 min-height: 100vh;
                 overflow-x: hidden;
             }
@@ -382,11 +382,11 @@
             .mobile-indicator {
                 display: flex;
                 position: sticky;
-                top: 5px;
+                top: 2px;
                 z-index: 100;
                 width: fit-content;
-                margin: 0 auto 5px auto;
-                padding: 8px 12px;
+                margin: 0 auto 3px auto;
+                padding: 6px 10px;
             }
 
             .main-container {
@@ -394,31 +394,31 @@
                 overflow-x: scroll;
                 scroll-snap-type: x mandatory;
                 -webkit-overflow-scrolling: touch;
-                gap: 10px;
+                gap: 5px;
                 width: 100%;
-                padding-bottom: 10px;
+                padding-bottom: 5px;
             }
 
             .left-panel,
             .center-panel,
             .right-panel {
                 scroll-snap-align: center;
-                min-width: calc(100vw - 20px);
-                max-width: calc(100vw - 20px);
+                min-width: calc(100vw - 10px);
+                max-width: calc(100vw - 10px);
                 flex-shrink: 0;
                 box-sizing: border-box;
             }
 
             .circle-container {
-                padding: 5px;
+                padding: 2px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
             }
 
             svg {
-                width: 98vw;
-                height: 98vw;
+                width: 100vw;
+                height: 100vw;
                 max-width: none;
                 max-height: none;
             }
@@ -786,10 +786,10 @@
         const centerMinorRadius = 120;
         // モバイル判定とサイズ調整
         const isMobile = window.innerWidth <= 900;
-        const degreeCircleRadius = isMobile ? 22 : 25;
-        const minorCircleRadius = isMobile ? 18 : 16;
-        const majorFontSize = isMobile ? '13' : '14';
-        const minorFontSize = isMobile ? '11' : '10';
+        const degreeCircleRadius = isMobile ? 26 : 25;
+        const minorCircleRadius = isMobile ? 22 : 16;
+        const majorFontSize = isMobile ? '15' : '14';
+        const minorFontSize = isMobile ? '13' : '10';
         const anglePerSegment = 30;
 
         // 現在の選択状態
@@ -1106,8 +1106,8 @@
                 } else if (degree.isMajor) {
                     displayRadius = outerRadius + 30;
                 } else {
-                    // マイナーコードのディグリーはマイナーリング内に配置
-                    displayRadius = (innerMinorRadius + centerMinorRadius) / 2 - 5;
+                    // マイナーコードのディグリーは白い中心円の外接位置に配置
+                    displayRadius = centerMinorRadius + minorCircleRadius + 5;
                 }
 
                 const pos = polarToCartesian(centerX, centerY, displayRadius, midAngle);
