@@ -374,8 +374,9 @@
             body {
                 flex-direction: column;
                 align-items: stretch;
-                padding: 5px 10px;
+                padding: 5px;
                 min-height: 100vh;
+                overflow-x: hidden;
             }
 
             .mobile-indicator {
@@ -384,8 +385,8 @@
                 top: 5px;
                 z-index: 100;
                 width: fit-content;
-                margin: 0 auto 8px auto;
-                padding: 10px 15px;
+                margin: 0 auto 5px auto;
+                padding: 8px 12px;
             }
 
             .main-container {
@@ -393,34 +394,19 @@
                 overflow-x: scroll;
                 scroll-snap-type: x mandatory;
                 -webkit-overflow-scrolling: touch;
-                gap: 15px;
+                gap: 10px;
                 width: 100%;
-                padding-bottom: 20px;
+                padding-bottom: 10px;
             }
 
-            .left-panel {
-                scroll-snap-align: center;
-                min-width: calc(100vw - 30px);
-                flex-shrink: 0;
-            }
-
-            .center-panel {
-                scroll-snap-align: center;
-                min-width: calc(100vw - 30px);
-                width: calc(100vw - 30px) !important;
-            }
-
+            .left-panel,
+            .center-panel,
             .right-panel {
                 scroll-snap-align: center;
-                min-width: calc(100vw - 30px);
-                max-width: none;
-            }
-
-            .left-panel {
-                scroll-snap-align: center;
                 min-width: calc(100vw - 20px);
+                max-width: calc(100vw - 20px);
                 flex-shrink: 0;
-                padding: 0;
+                box-sizing: border-box;
             }
 
             .circle-container {
@@ -431,23 +417,26 @@
             }
 
             svg {
-                width: 92vw;
-                height: 92vw;
-                max-width: 360px;
-                max-height: 360px;
+                width: 88vw;
+                height: 88vw;
+                max-width: 340px;
+                max-height: 340px;
             }
 
             .info-panel {
-                padding: 8px 10px;
-                margin-top: 8px;
+                padding: 10px;
+                margin-top: 5px;
             }
 
             .info-panel h2 {
                 font-size: 1.1em;
+                margin-bottom: 5px;
             }
 
             .info-panel p {
-                font-size: 0.85em;
+                font-size: 0.8em;
+                word-wrap: break-word;
+                line-height: 1.4;
             }
         }
     </style>
