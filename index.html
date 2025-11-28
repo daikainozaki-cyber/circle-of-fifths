@@ -329,10 +329,125 @@
         .diatonic-table td:first-child {
             font-weight: bold;
         }
+
+        /* モバイル用ドットインジケーター */
+        .mobile-indicator {
+            display: none;
+            justify-content: center;
+            gap: 12px;
+            padding: 15px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-bottom: 15px;
+        }
+
+        .mobile-indicator .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #c8e6c9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-indicator .dot.active {
+            background: #2e7d32;
+            transform: scale(1.2);
+        }
+
+        .mobile-indicator .dot-label {
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        .dot-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* モバイル用レイアウト */
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 10px;
+            }
+
+            .mobile-indicator {
+                display: flex;
+                position: sticky;
+                top: 10px;
+                z-index: 100;
+                width: fit-content;
+                margin: 0 auto 15px auto;
+            }
+
+            .main-container {
+                flex-direction: row;
+                overflow-x: scroll;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                gap: 15px;
+                width: 100%;
+                padding-bottom: 20px;
+            }
+
+            .left-panel {
+                scroll-snap-align: center;
+                min-width: calc(100vw - 30px);
+                flex-shrink: 0;
+            }
+
+            .center-panel {
+                scroll-snap-align: center;
+                min-width: calc(100vw - 30px);
+                width: calc(100vw - 30px) !important;
+            }
+
+            .right-panel {
+                scroll-snap-align: center;
+                min-width: calc(100vw - 30px);
+                max-width: none;
+            }
+
+            .circle-container {
+                padding: 15px;
+                overflow-x: auto;
+            }
+
+            svg {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .info-panel {
+                padding: 10px 15px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="main-container">
+    <!-- モバイル用ドットインジケーター -->
+    <div class="mobile-indicator" id="mobile-indicator">
+        <div class="dot-wrapper" data-panel="0">
+            <div class="dot active"></div>
+            <div class="dot-label">五度圏</div>
+        </div>
+        <div class="dot-wrapper" data-panel="1">
+            <div class="dot"></div>
+            <div class="dot-label">コード</div>
+        </div>
+        <div class="dot-wrapper" data-panel="2">
+            <div class="dot"></div>
+            <div class="dot-label">進行</div>
+        </div>
+    </div>
+
+    <div class="main-container" id="main-container">
         <!-- 左パネル: 五度圏 -->
         <div class="left-panel">
             <div class="circle-container">
@@ -1320,6 +1435,41 @@
 
         // 進行選択のイベントリスナー
         document.getElementById('progression-select').addEventListener('change', updateProgressionDisplay);
+
+        // モバイル用スクロール検出とドットインジケーター更新
+        const mainContainer = document.getElementById('main-container');
+        const mobileIndicator = document.getElementById('mobile-indicator');
+        const dots = mobileIndicator.querySelectorAll('.dot');
+        const dotWrappers = mobileIndicator.querySelectorAll('.dot-wrapper');
+
+        function updateActiveIndicator() {
+            const scrollLeft = mainContainer.scrollLeft;
+            const containerWidth = mainContainer.clientWidth;
+            const panelIndex = Math.round(scrollLeft / containerWidth);
+
+            dots.forEach((dot, index) => {
+                if (index === panelIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        // スクロールイベントでドット更新
+        mainContainer.addEventListener('scroll', updateActiveIndicator);
+
+        // ドットクリックでパネルへスクロール
+        dotWrappers.forEach((wrapper) => {
+            wrapper.addEventListener('click', () => {
+                const panelIndex = parseInt(wrapper.getAttribute('data-panel'));
+                const containerWidth = mainContainer.clientWidth;
+                mainContainer.scrollTo({
+                    left: panelIndex * containerWidth,
+                    behavior: 'smooth'
+                });
+            });
+        });
     </script>
 </body>
 </html>
