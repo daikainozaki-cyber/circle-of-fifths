@@ -558,6 +558,20 @@
         const SUBDOMINANT_COLOR = '#42a5f5';  // サブドミナント系：ブルー
         const DOMINANT_COLOR = '#ef5350';     // ドミナント系：レッド
 
+        // ========================================
+        // 共通コード定義（SSOT: Single Source of Truth）
+        // ========================================
+        // 裏コード（メジャーキー用）- 五度圏位置はoffsetで計算
+        const bII_MAJOR = {
+            roman: '♭II', offset: -5, suffix: '7',
+            function: '裏コード（V7代理）', isMajor: true, color: DOMINANT_COLOR, isDiatonic: false
+        };
+        // 裏コード（マイナーキー用）- 五度圏位置はcircleOffsetで計算（平行長調基準のため異なる）
+        const bII_MINOR = {
+            roman: '♭II', offset: -5, circleOffset: -2, suffix: '7',
+            function: '裏コード（V7代理）', isMajor: true, color: DOMINANT_COLOR, isDiatonic: false
+        };
+
         // ダイアトニックコードのディグリー（五度圏上のオフセット）
         const majorDegrees = [
             { roman: 'I', offset: 0, suffix: 'Maj7', function: 'トニック', isMajor: true, color: TONIC_COLOR, isDiatonic: true },
@@ -571,7 +585,7 @@
             { roman: 'I', offset: 0, suffix: '7', function: 'トニック（ブルース）', isMajor: true, color: TONIC_COLOR, isDiatonic: false },
             { roman: 'IV', offset: -1, suffix: '7', function: 'サブドミナント（ブルース）', isMajor: true, color: SUBDOMINANT_COLOR, isDiatonic: false },
             { roman: 'vii', offset: 5, suffix: 'dim7', function: 'ドミナント（代理）', isMajor: false, color: DOMINANT_COLOR, isDiatonic: false },
-            { roman: '♭II', offset: -5, suffix: '7', function: '裏コード（V7代理）', isMajor: true, color: DOMINANT_COLOR, isDiatonic: false },
+            bII_MAJOR,  // 共通定義を参照
             { roman: 'IV', offset: -1, suffix: 'm7', function: 'サブドミナント・マイナー', isMajor: false, color: SUBDOMINANT_COLOR, isDiatonic: false }
         ];
 
@@ -587,7 +601,7 @@
             // ノンダイアトニックだが実用的
             { roman: 'V', offset: 1, circleOffset: 1, suffix: '7', function: 'ドミナント', isMajor: true, color: DOMINANT_COLOR, isDiatonic: false },
             { roman: 'vii', offset: 5, circleOffset: 5, suffix: 'dim7', function: 'ドミナント（代理）', isMajor: false, color: DOMINANT_COLOR, isDiatonic: false },
-            { roman: '♭II', offset: -5, circleOffset: -2, suffix: '7', function: '裏コード（V7代理）', isMajor: true, color: DOMINANT_COLOR, isDiatonic: false }
+            bII_MINOR  // 共通定義を参照
         ];
 
         // ハーモニックマイナーのダイアトニックコード
@@ -600,7 +614,7 @@
             { roman: '♭VI', offset: -4, circleOffset: -1, suffix: 'Maj7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR, isDiatonic: true },
             { roman: 'vii', offset: 5, circleOffset: 5, suffix: 'dim7', function: 'ドミナント（代理）', isMajor: false, color: DOMINANT_COLOR, isDiatonic: true },
             // ノンダイアトニックだが実用的
-            { roman: '♭II', offset: -5, circleOffset: -2, suffix: '7', function: '裏コード（V7代理）', isMajor: true, color: DOMINANT_COLOR, isDiatonic: false }
+            bII_MINOR  // 共通定義を参照
         ];
 
         // メロディックマイナーのダイアトニックコード
@@ -613,7 +627,7 @@
             { roman: 'vi', offset: 3, circleOffset: 3, suffix: 'm7(♭5)', function: 'サブドミナント（代理）', isMajor: false, color: SUBDOMINANT_COLOR, isDiatonic: true },
             { roman: 'vii', offset: 5, circleOffset: 5, suffix: 'm7(♭5)', function: 'ドミナント（代理）', isMajor: false, color: DOMINANT_COLOR, isDiatonic: true },
             // ノンダイアトニックだが実用的
-            { roman: '♭II', offset: -5, circleOffset: -2, suffix: '7', function: '裏コード（V7代理）', isMajor: true, color: DOMINANT_COLOR, isDiatonic: false }
+            bII_MINOR  // 共通定義を参照
         ];
 
         // 後方互換性のため（進行表示用）
@@ -1073,7 +1087,7 @@
                 { roman: 'V', offset: 1, suffix: '7', isMajor: true, color: DOMINANT_COLOR },
                 { roman: 'vi', offset: 3, suffix: 'm7', isMajor: false, color: TONIC_COLOR },
                 { roman: 'vii', offset: 5, suffix: 'dim7', isMajor: false, color: DOMINANT_COLOR },
-                { roman: '♭II', offset: -5, suffix: '7', isMajor: true, color: DOMINANT_COLOR, isSubstitute: true }
+                { ...bII_MAJOR, isSubstitute: true }  // 共通定義を参照
             ];
 
             // マイナーキー用
@@ -1087,7 +1101,7 @@
                 { roman: '♭VI', offset: -4, circleOffset: -1, suffix: 'Maj7', isMajor: true, color: SUBDOMINANT_COLOR },
                 { roman: '♭VII', offset: -2, circleOffset: 1, suffix: '7', isMajor: true, color: SUBDOMINANT_COLOR },
                 { roman: 'vii', offset: 5, circleOffset: 5, suffix: 'dim7', isMajor: false, color: DOMINANT_COLOR },
-                { roman: '♭II', offset: -5, circleOffset: -2, suffix: '7', isMajor: true, color: DOMINANT_COLOR, isSubstitute: true }
+                { ...bII_MINOR, isSubstitute: true }  // 共通定義を参照
             ];
 
             const degreesToShow = type === 'major' ? majorCircleChords : minorCircleChords;
