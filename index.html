@@ -561,15 +561,40 @@
         // ========================================
         // 共通コード定義（SSOT: Single Source of Truth）
         // ========================================
-        // 裏コード（メジャーキー用）- 五度圏位置はoffsetで計算
+
+        // --- 裏コード ---
+        // メジャーキー用 - 五度圏位置はoffsetで計算
         const bII_MAJOR = {
             roman: '♭II', offset: -5, suffix: '7',
             function: '裏コード（V7代理）', isMajor: true, color: DOMINANT_COLOR, isDiatonic: false
         };
-        // 裏コード（マイナーキー用）- 五度圏位置はcircleOffsetで計算（平行長調基準のため異なる）
+        // マイナーキー用 - 五度圏位置はcircleOffsetで計算（平行長調基準のため異なる）
         const bII_MINOR = {
             roman: '♭II', offset: -5, circleOffset: -2, suffix: '7',
             function: '裏コード（V7代理）', isMajor: true, color: DOMINANT_COLOR, isDiatonic: false
+        };
+
+        // --- マイナースケール共通コード（Natural/Harmonic共通） ---
+        const ii_MINOR = {
+            roman: 'ii', offset: 2, circleOffset: 2, suffix: 'm7(♭5)',
+            function: 'サブドミナント（代理）', isMajor: false, color: SUBDOMINANT_COLOR, isDiatonic: true
+        };
+        const iv_MINOR = {
+            roman: 'iv', offset: -1, circleOffset: -1, suffix: 'm7',
+            function: 'サブドミナント', isMajor: false, color: SUBDOMINANT_COLOR, isDiatonic: true
+        };
+        const bVI_MINOR = {
+            roman: '♭VI', offset: -4, circleOffset: -1, suffix: 'Maj7',
+            function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR, isDiatonic: true
+        };
+        // V7ドミナント（Harmonic/Melodic共通、Naturalではノンダイアトニック）
+        const V7_MINOR_DIATONIC = {
+            roman: 'V', offset: 1, circleOffset: 1, suffix: '7',
+            function: 'ドミナント', isMajor: true, color: DOMINANT_COLOR, isDiatonic: true
+        };
+        const V7_MINOR_NONDIATONIC = {
+            roman: 'V', offset: 1, circleOffset: 1, suffix: '7',
+            function: 'ドミナント', isMajor: true, color: DOMINANT_COLOR, isDiatonic: false
         };
 
         // ダイアトニックコードのディグリー（五度圏上のオフセット）
@@ -592,29 +617,29 @@
         // ナチュラルマイナーのダイアトニックコード（実用的なノンダイアトニック含む）
         const minorDegreesNatural = [
             { roman: 'i', offset: 0, circleOffset: 0, suffix: 'm7', function: 'トニック', isMajor: false, color: TONIC_COLOR, isDiatonic: true },
-            { roman: 'ii', offset: 2, circleOffset: 2, suffix: 'm7(♭5)', function: 'サブドミナント（代理）', isMajor: false, color: SUBDOMINANT_COLOR, isDiatonic: true },
+            ii_MINOR,  // 共通定義
             { roman: '♭III', offset: -3, circleOffset: 0, suffix: 'Maj7', function: 'トニック（代理）', isMajor: true, color: TONIC_COLOR, isDiatonic: true },
-            { roman: 'iv', offset: -1, circleOffset: -1, suffix: 'm7', function: 'サブドミナント', isMajor: false, color: SUBDOMINANT_COLOR, isDiatonic: true },
+            iv_MINOR,  // 共通定義
             { roman: 'v', offset: 1, circleOffset: 1, suffix: 'm7', function: 'ドミナント（ナチュラル）', isMajor: false, color: DOMINANT_COLOR, isDiatonic: true },
-            { roman: '♭VI', offset: -4, circleOffset: -1, suffix: 'Maj7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR, isDiatonic: true },
+            bVI_MINOR,  // 共通定義
             { roman: '♭VII', offset: -2, circleOffset: 1, suffix: '7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR, isDiatonic: true },
             // ノンダイアトニックだが実用的
-            { roman: 'V', offset: 1, circleOffset: 1, suffix: '7', function: 'ドミナント', isMajor: true, color: DOMINANT_COLOR, isDiatonic: false },
+            V7_MINOR_NONDIATONIC,  // 共通定義
             { roman: 'vii', offset: 5, circleOffset: 5, suffix: 'dim7', function: 'ドミナント（代理）', isMajor: false, color: DOMINANT_COLOR, isDiatonic: false },
-            bII_MINOR  // 共通定義を参照
+            bII_MINOR  // 共通定義
         ];
 
         // ハーモニックマイナーのダイアトニックコード
         const minorDegreesHarmonic = [
             { roman: 'i', offset: 0, circleOffset: 0, suffix: 'm(Maj7)', function: 'トニック', isMajor: false, color: TONIC_COLOR, isDiatonic: true },
-            { roman: 'ii', offset: 2, circleOffset: 2, suffix: 'm7(♭5)', function: 'サブドミナント（代理）', isMajor: false, color: SUBDOMINANT_COLOR, isDiatonic: true },
+            ii_MINOR,  // 共通定義
             { roman: '♭III', offset: -3, circleOffset: 0, suffix: 'Maj7(♯5)', function: 'トニック（代理）', isMajor: true, color: TONIC_COLOR, isDiatonic: true },
-            { roman: 'iv', offset: -1, circleOffset: -1, suffix: 'm7', function: 'サブドミナント', isMajor: false, color: SUBDOMINANT_COLOR, isDiatonic: true },
-            { roman: 'V', offset: 1, circleOffset: 1, suffix: '7', function: 'ドミナント', isMajor: true, color: DOMINANT_COLOR, isDiatonic: true },
-            { roman: '♭VI', offset: -4, circleOffset: -1, suffix: 'Maj7', function: 'サブドミナント（代理）', isMajor: true, color: SUBDOMINANT_COLOR, isDiatonic: true },
+            iv_MINOR,  // 共通定義
+            V7_MINOR_DIATONIC,  // 共通定義
+            bVI_MINOR,  // 共通定義
             { roman: 'vii', offset: 5, circleOffset: 5, suffix: 'dim7', function: 'ドミナント（代理）', isMajor: false, color: DOMINANT_COLOR, isDiatonic: true },
             // ノンダイアトニックだが実用的
-            bII_MINOR  // 共通定義を参照
+            bII_MINOR  // 共通定義
         ];
 
         // メロディックマイナーのダイアトニックコード
@@ -623,11 +648,11 @@
             { roman: 'ii', offset: 2, circleOffset: 2, suffix: 'm7', function: 'サブドミナント', isMajor: false, color: SUBDOMINANT_COLOR, isDiatonic: true },
             { roman: '♭III', offset: -3, circleOffset: 0, suffix: 'Maj7(♯5)', function: 'トニック（代理）', isMajor: true, color: TONIC_COLOR, isDiatonic: true },
             { roman: 'IV', offset: -1, circleOffset: -1, suffix: '7', function: 'サブドミナント', isMajor: true, color: SUBDOMINANT_COLOR, isDiatonic: true },
-            { roman: 'V', offset: 1, circleOffset: 1, suffix: '7', function: 'ドミナント', isMajor: true, color: DOMINANT_COLOR, isDiatonic: true },
+            V7_MINOR_DIATONIC,  // 共通定義
             { roman: 'vi', offset: 3, circleOffset: 3, suffix: 'm7(♭5)', function: 'サブドミナント（代理）', isMajor: false, color: SUBDOMINANT_COLOR, isDiatonic: true },
             { roman: 'vii', offset: 5, circleOffset: 5, suffix: 'm7(♭5)', function: 'ドミナント（代理）', isMajor: false, color: DOMINANT_COLOR, isDiatonic: true },
             // ノンダイアトニックだが実用的
-            bII_MINOR  // 共通定義を参照
+            bII_MINOR  // 共通定義
         ];
 
         // 後方互換性のため（進行表示用）
