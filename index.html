@@ -485,7 +485,7 @@
         </div>
 
         <!-- 中央パネル: ダイアトニックコード -->
-        <div class="center-panel" id="center-panel" style="display: none;">
+        <div class="center-panel" id="center-panel">
             <h2>ダイアトニックコード</h2>
             <div class="diatonic-panel" id="diatonic-panel">
                 <h3 id="diatonic-title">ダイアトニックコード</h3>
@@ -498,7 +498,7 @@
                         </tr>
                     </thead>
                     <tbody id="diatonic-tbody">
-                        <!-- JavaScriptで動的に生成 -->
+                        <tr><td colspan="3" style="text-align:center;color:#999;padding:20px;">キーを選択してください</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -894,7 +894,7 @@
             const majorTextPos = polarToCartesian(centerX, centerY, (outerRadius + innerMajorRadius) / 2, midAngle);
             const majorText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             majorText.setAttribute('x', majorTextPos.x);
-            majorText.setAttribute('y', majorTextPos.y + 6);
+            majorText.setAttribute('y', majorTextPos.y);
             majorText.setAttribute('text-anchor', 'middle');
             majorText.setAttribute('dominant-baseline', 'middle');
             majorText.setAttribute('font-size', '22');
@@ -980,7 +980,7 @@
         melodicBtn.setAttribute('height', 30);
         melodicBtn.setAttribute('rx', '5');
         melodicBtn.setAttribute('fill', 'white');
-        melodicBtn.setAttribute('stroke', '#e91e63');
+        melodicBtn.setAttribute('stroke', '#43a047');
         melodicBtn.setAttribute('stroke-width', '2');
         melodicBtn.setAttribute('cursor', 'pointer');
         melodicBtn.setAttribute('id', 'melodic-btn');
@@ -992,7 +992,7 @@
         melodicText.setAttribute('text-anchor', 'middle');
         melodicText.setAttribute('font-size', '8');
         melodicText.setAttribute('font-weight', '600');
-        melodicText.setAttribute('fill', '#e91e63');
+        melodicText.setAttribute('fill', '#43a047');
         melodicText.setAttribute('cursor', 'pointer');
         melodicText.setAttribute('id', 'melodic-text');
         melodicText.textContent = 'Melodic';
@@ -1006,7 +1006,7 @@
         harmonicBtn.setAttribute('height', 30);
         harmonicBtn.setAttribute('rx', '5');
         harmonicBtn.setAttribute('fill', 'white');
-        harmonicBtn.setAttribute('stroke', '#9c27b0');
+        harmonicBtn.setAttribute('stroke', '#1b5e20');
         harmonicBtn.setAttribute('stroke-width', '2');
         harmonicBtn.setAttribute('cursor', 'pointer');
         harmonicBtn.setAttribute('id', 'harmonic-btn');
@@ -1018,7 +1018,7 @@
         harmonicText.setAttribute('text-anchor', 'middle');
         harmonicText.setAttribute('font-size', '8');
         harmonicText.setAttribute('font-weight', '600');
-        harmonicText.setAttribute('fill', '#9c27b0');
+        harmonicText.setAttribute('fill', '#1b5e20');
         harmonicText.setAttribute('cursor', 'pointer');
         harmonicText.setAttribute('id', 'harmonic-text');
         harmonicText.textContent = 'Harmonic';
@@ -1032,19 +1032,19 @@
             const hText = document.getElementById('harmonic-text');
 
             if (currentScaleMode === 'melodic') {
-                mBtn.setAttribute('fill', '#e91e63');
+                mBtn.setAttribute('fill', '#43a047');
                 mText.setAttribute('fill', 'white');
             } else {
                 mBtn.setAttribute('fill', 'white');
-                mText.setAttribute('fill', '#e91e63');
+                mText.setAttribute('fill', '#43a047');
             }
 
             if (currentScaleMode === 'harmonic') {
-                hBtn.setAttribute('fill', '#9c27b0');
+                hBtn.setAttribute('fill', '#1b5e20');
                 hText.setAttribute('fill', 'white');
             } else {
                 hBtn.setAttribute('fill', 'white');
-                hText.setAttribute('fill', '#9c27b0');
+                hText.setAttribute('fill', '#1b5e20');
             }
         }
 
@@ -1239,8 +1239,7 @@
             const diatonicTbody = document.getElementById('diatonic-tbody');
             const diatonicTitle = document.getElementById('diatonic-title');
 
-            // 中央パネルを表示
-            centerPanel.style.display = 'block';
+            // 中央パネルは常時表示（レイアウトシフト防止）
 
             // テーブルの内容をクリア
             diatonicTbody.innerHTML = '';
