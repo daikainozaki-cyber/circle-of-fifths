@@ -873,7 +873,7 @@
 
         // 各セグメントを描画
         keys.forEach((key, index) => {
-            const startAngle = index * anglePerSegment;
+            const startAngle = index * anglePerSegment - anglePerSegment / 2;
             const endAngle = startAngle + anglePerSegment;
             const midAngle = startAngle + anglePerSegment / 2;
 
@@ -917,8 +917,8 @@
             minorSegment.setAttribute('data-index', index);
             svg.appendChild(minorSegment);
 
-            // 短調のテキスト（外側に配置）
-            const minorTextPos = polarToCartesian(centerX, centerY, (innerMinorRadius + centerMinorRadius) / 2 + 20, midAngle);
+            // 短調のテキスト（セグメント中央に配置）
+            const minorTextPos = polarToCartesian(centerX, centerY, (innerMinorRadius + centerMinorRadius) / 2, midAngle);
             const minorText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             minorText.setAttribute('x', minorTextPos.x);
             minorText.setAttribute('y', minorTextPos.y);
@@ -1146,7 +1146,7 @@
                     targetIndex = (targetIndex + 9) % 12;
                 }
 
-                const startAngle = targetIndex * anglePerSegment;
+                const startAngle = targetIndex * anglePerSegment - anglePerSegment / 2;
                 const midAngle = startAngle + anglePerSegment / 2;
 
                 let displayRadius;
